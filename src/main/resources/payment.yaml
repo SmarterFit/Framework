@@ -1,0 +1,5 @@
+payment:
+  enabled-methods:
+    - PIX
+    - DEBIT_CARD
+    - CREDIT_CARD

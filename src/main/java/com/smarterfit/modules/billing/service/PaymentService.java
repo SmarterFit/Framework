@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.smarterfit.framework.billing.handler.PaymentHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -44,9 +45,10 @@ public class PaymentService {
 
    @Autowired
    public PaymentService(PaymentRepository paymentRepository,
-         PaymentValidation paymentValidation,
-         List<PaymentProcessor> paymentProcessors,
-         SubscriptionValidation subscriptionValidation, ApplicationEventPublisher publisher) {
+                         PaymentValidation paymentValidation,
+                         List<PaymentProcessor> paymentProcessors,
+                         SubscriptionValidation subscriptionValidation, ApplicationEventPublisher publisher,
+                         PaymentHandler paymentHandler) {
       this.paymentRepository = paymentRepository;
       this.paymentValidation = paymentValidation;
       this.subscriptionValidation = subscriptionValidation;
