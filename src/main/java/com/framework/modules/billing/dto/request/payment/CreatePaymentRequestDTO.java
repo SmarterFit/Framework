@@ -2,7 +2,6 @@ package com.framework.modules.billing.dto.request.payment;
 
 import java.util.UUID;
 
-import com.framework.common.enums.PaymentMethod;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -21,5 +20,5 @@ public class CreatePaymentRequestDTO {
     private UUID subscriptionId;
 
     @NotNull(message = "method cannot be null")
-    private PaymentMethod method;
+    private String method;
 }

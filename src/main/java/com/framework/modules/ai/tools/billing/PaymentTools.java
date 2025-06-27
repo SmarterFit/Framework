@@ -8,7 +8,7 @@ import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import com.framework.common.enums.PaymentMethod;
+
 import com.framework.common.enums.PaymentStatus;
 import com.framework.modules.billing.dto.request.payment.SearchPaymentRequestDTO;
 import com.framework.modules.billing.dto.response.payment.PaymentResponseDTO;
@@ -25,7 +25,7 @@ public class PaymentTools {
    @Tool(description = "Buscar pagamentos. Só preencha os parâmetros que forem explicitamente informados pelo usuário.")
    public List<PaymentResponseDTO> searchPayment(
          @ToolParam(required = true, description = "Id do proprietário") UUID ownerId,
-         @ToolParam(required = false, description = "Métodos de pagamento") List<PaymentMethod> methods,
+         @ToolParam(required = false, description = "Métodos de pagamento") List<String> methods,
          @ToolParam(required = false, description = "Status de pagamento") List<PaymentStatus> status) {
       SearchPaymentRequestDTO request = new SearchPaymentRequestDTO();
 

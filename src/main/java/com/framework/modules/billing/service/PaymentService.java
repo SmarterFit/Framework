@@ -111,6 +111,7 @@ public class PaymentService {
       subscriptionValidation.validateSubscriptionNotIsCanceled(subscription);
 
       PaymentHandler paymentHandler = paymentValidation.getMethodPayment(payment.getMethod());
+      System.out.println("Pagamento realizado via : " + paymentHandler.getPaymentMethodName());
       PaymentProcessorResponseDTO response = paymentHandler.processPayment(requestDTO);
 
       if (response.getSuccess()) {

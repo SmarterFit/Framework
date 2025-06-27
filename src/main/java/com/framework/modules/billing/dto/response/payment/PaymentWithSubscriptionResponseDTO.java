@@ -3,7 +3,6 @@ package com.framework.modules.billing.dto.response.payment;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.framework.common.enums.PaymentMethod;
 import com.framework.common.enums.PaymentStatus;
 import com.framework.modules.billing.dto.response.subscription.SubscriptionResponseDTO;
 
@@ -24,6 +23,6 @@ public class PaymentWithSubscriptionResponseDTO {
    private Double amount;
    private LocalDateTime paymentDate;
    private LocalDateTime expirationIn;
-   private PaymentMethod method;
+   private String method;
    private PaymentStatus status;
 }

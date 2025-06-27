@@ -18,6 +18,7 @@ public class PaymentHandlerRegistry {
     private final PaymentMethodRepository methodRepository;
     private final PaymentProperties paymentProperties;
     private final List<PaymentHandler> handlers;
+    private final Set<String> enabledSet;
 
     public PaymentHandlerRegistry(List<PaymentHandler> handlers,
                                   PaymentMethodRepository methodRepository,
@@ -25,22 +26,21 @@ public class PaymentHandlerRegistry {
         this.handlers = handlers;
         this.methodRepository = methodRepository;
         this.paymentProperties = paymentProperties;
+        this.enabledSet = new HashSet<>(paymentProperties.getEnabledMethods());
     }
 
     @PostConstruct
     @Transactional
     public void init() {
-        System.out.println("Enabled methods from properties: " + paymentProperties.getEnabledMethods());
+        System.out.println("Enabled methods from properties: " + enabledSet);
         initializeActiveHandlers();
     }
 
     private void initializeActiveHandlers() {
-        Set<String> enabledSet = new HashSet<>(paymentProperties.getEnabledMethods());
-
         for (PaymentHandler handler : handlers) {
             String methodName = handler.getPaymentMethodName();
 
-            PaymentMethod method = new PaymentMethod();
+            PaymentMethod method = methodRepository.findByName(methodName).orElseGet(PaymentMethod::new);
             method.setName(methodName);
             method.setEnabled(enabledSet.contains(methodName));
             method.setHandlerClass(handler.getClass().getName());
@@ -52,11 +52,22 @@ public class PaymentHandlerRegistry {
     }
 
     public void deactivateUnavailableMethods() {
+
+        // Métodos que possuem handler implementado no código
         List<String> activeMethodNames = handlers.stream()
                 .map(PaymentHandler::getPaymentMethodName)
                 .toList();
 
-        methodRepository.deactivateMethodsNotIn(activeMethodNames);
+        // Só permite os que estão habilitados na configuração também
+        List<String> allowedMethods = activeMethodNames.stream()
+                .filter(enabledSet::contains)  // FILTRO pela config
+                .toList();
+
+        // Desativa todos os métodos que não estão na lista permitida
+        methodRepository.deactivateMethodsNotIn(allowedMethods);
+
+        // Limpa também do mapa de handlers ativos (garantir consistência)
+        activeHandlers.keySet().removeIf(method -> !allowedMethods.contains(method));
     }
 
     public void disablePaymentMethod(String methodName) {

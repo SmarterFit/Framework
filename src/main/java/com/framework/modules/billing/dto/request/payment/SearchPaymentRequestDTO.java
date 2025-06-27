@@ -3,7 +3,6 @@ package com.framework.modules.billing.dto.request.payment;
 import java.util.List;
 import java.util.UUID;
 
-import com.framework.common.enums.PaymentMethod;
 import com.framework.common.enums.PaymentStatus;
 
 import lombok.AllArgsConstructor;
@@ -20,6 +19,6 @@ import lombok.Setter;
 public class SearchPaymentRequestDTO {
     private UUID subscriptionId;
     private UUID subscriptionOwnerId;
-    private List<PaymentMethod> methods;
+    private List<String> methods;
     private List<PaymentStatus> status;
 }
