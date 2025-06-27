@@ -21,9 +21,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @EnableScheduling
 @EnableConfigurationProperties(PaymentProperties.class)
-public class SmarterFitApplication implements CommandLineRunner {
+public class FrameworkApplication implements CommandLineRunner {
 	public static void main(String[] args) {
-		SpringApplication.run(SmarterFitApplication.class, args);
+		SpringApplication.run(FrameworkApplication.class, args);
 	}
 
 	@Override
