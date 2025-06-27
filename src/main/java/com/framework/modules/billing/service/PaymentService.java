@@ -5,6 +5,8 @@ import com.framework.common.enums.PaymentStatus;
 import com.framework.common.exceptions.BusinessException;
 import com.framework.framework.billing.PaymentHandlerRegistry;
 import com.framework.framework.billing.handler.PaymentHandler;
+import com.framework.framework.gamification.dto.request.GamificationEventRequestDTO;
+import com.framework.framework.gamification.event.GamificationEvent;
 import com.framework.modules.billing.dto.request.payment.CreatePaymentRequestDTO;
 import com.framework.modules.billing.dto.request.payment.ProcessorPaymentRequestDTO;
 import com.framework.modules.billing.dto.request.payment.SearchPaymentRequestDTO;
@@ -19,6 +21,8 @@ import com.framework.modules.billing.repository.PaymentRepository;
 import com.framework.modules.billing.specification.PaymentSpecifications;
 import com.framework.modules.billing.validation.PaymentValidation;
 import com.framework.modules.billing.validation.SubscriptionValidation;
+import com.framework.modules.useraccess.entity.User;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -29,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -41,9 +46,9 @@ public class PaymentService {
 
    @Autowired
    public PaymentService(PaymentRepository paymentRepository,
-                         PaymentValidation paymentValidation,
-                         SubscriptionValidation subscriptionValidation, ApplicationEventPublisher publisher,
-                         PaymentHandlerRegistry paymentHandlerRegistry) {
+         PaymentValidation paymentValidation,
+         SubscriptionValidation subscriptionValidation, ApplicationEventPublisher publisher,
+         PaymentHandlerRegistry paymentHandlerRegistry) {
       this.paymentRepository = paymentRepository;
       this.paymentValidation = paymentValidation;
       this.subscriptionValidation = subscriptionValidation;
@@ -119,6 +124,16 @@ public class PaymentService {
          payment.setPaymentDate(LocalDateTime.now());
          paymentRepository.save(payment);
 
+         User user = payment.getSubscription().getOwner();
+
+         GamificationEventRequestDTO dto = GamificationEventRequestDTO.builder()
+               .eventType("login")
+               .userId(user.getId())
+               .details(Map.of("paymentSuccess", Boolean.TRUE))
+               .build();
+         GamificationEvent event = new GamificationEvent(dto);
+         publisher.publishEvent(event);
+
          publisher.publishEvent(new PaymentConfirmedEvent(subscription));
 
          return response;
@@ -168,6 +183,5 @@ public class PaymentService {
    public void activePaymentMethod(String methodName) {
       paymentHandlerRegistry.activePaymentMethod(methodName);
    }
-
 
 }

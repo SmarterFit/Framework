@@ -9,9 +9,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
+import com.framework.framework.gamification.dto.request.GamificationEventRequestDTO;
+import com.framework.framework.gamification.event.GamificationEvent;
 import com.framework.modules.billing.validation.SubscriptionValidation;
-import com.framework.modules.checkin.domain.GymPoints;
-import com.framework.modules.checkin.event.CalculatePointsUserEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,18 +35,16 @@ public class GymCheckInService {
     private final SubscriptionValidation subscriptionValidation;
     private final SensitiveCheckInDataDecryptor sensitiveCheckInDataDecryptor;
     private final ApplicationEventPublisher publisher;
-    private final GymPoints gymPoints;
 
     public GymCheckInService(GymCheckInRepository gymCheckInRepository, GymCheckInValidation gymCheckInValidation,
             UserValidation userValidation, SubscriptionValidation subscriptionValidation,
-            SensitiveCheckInDataDecryptor sensitiveCheckInDataDecryptor, GymPoints gymPoints,
+            SensitiveCheckInDataDecryptor sensitiveCheckInDataDecryptor,
             ApplicationEventPublisher publisher) {
         this.gymCheckInRepository = gymCheckInRepository;
         this.gymCheckInValidation = gymCheckInValidation;
         this.userValidation = userValidation;
         this.subscriptionValidation = subscriptionValidation;
         this.sensitiveCheckInDataDecryptor = sensitiveCheckInDataDecryptor;
-        this.gymPoints = gymPoints;
         this.publisher = publisher;
     }
 
@@ -70,8 +68,26 @@ public class GymCheckInService {
         gymCheckIn = gymCheckInRepository.save(gymCheckIn);
 
         if (isFirstCheckInToday) {
-            Integer points = gymPoints.calculateDailyConsecutivePoints(userId);
-            publisher.publishEvent(new CalculatePointsUserEvent(userId, points));
+            Integer streak = 0;
+            for (int i = 0; i < 7; i++) {
+                startOfDay = startOfDay.minusDays(1);
+                endOfDay = endOfDay.minusDays(1);
+                boolean hasCheckIn = gymCheckInRepository
+                        .existsByUserIdAndCheckInTimeBetween(userId, startOfDay, endOfDay);
+                if (hasCheckIn) {
+                    streak += 1;
+                } else {
+                    break;
+                }
+            }
+
+            GamificationEventRequestDTO dto = GamificationEventRequestDTO.builder()
+                    .eventType("check-in")
+                    .userId(user.getId())
+                    .details(Map.of("firstCheckInToday", isFirstCheckInToday, "streak", streak))
+                    .build();
+            GamificationEvent event = new GamificationEvent(dto);
+            publisher.publishEvent(event);
         }
 
         return sensitiveCheckInDataDecryptor.decrypt(
