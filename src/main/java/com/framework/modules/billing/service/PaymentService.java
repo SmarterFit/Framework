@@ -1,24 +1,10 @@
 package com.framework.modules.billing.service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import com.framework.framework.billing.handler.PaymentHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.framework.common.config.BusinessRules;
-import com.framework.common.enums.PaymentMethod;
 import com.framework.common.enums.PaymentStatus;
 import com.framework.common.exceptions.BusinessException;
+import com.framework.framework.billing.PaymentHandlerRegistry;
+import com.framework.framework.billing.handler.PaymentHandler;
 import com.framework.modules.billing.dto.request.payment.CreatePaymentRequestDTO;
 import com.framework.modules.billing.dto.request.payment.ProcessorPaymentRequestDTO;
 import com.framework.modules.billing.dto.request.payment.SearchPaymentRequestDTO;
@@ -34,13 +20,24 @@ import com.framework.modules.billing.repository.PaymentRepository;
 import com.framework.modules.billing.specification.PaymentSpecifications;
 import com.framework.modules.billing.validation.PaymentValidation;
 import com.framework.modules.billing.validation.SubscriptionValidation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class PaymentService {
    private final PaymentRepository paymentRepository;
    private final PaymentValidation paymentValidation;
    private final SubscriptionValidation subscriptionValidation;
-   private final Map<PaymentMethod, PaymentProcessor> paymentProcessors;
+   private final PaymentHandlerRegistry paymentHandlerRegistry;
    private final ApplicationEventPublisher publisher;
 
    @Autowired
@@ -48,14 +45,12 @@ public class PaymentService {
                          PaymentValidation paymentValidation,
                          List<PaymentProcessor> paymentProcessors,
                          SubscriptionValidation subscriptionValidation, ApplicationEventPublisher publisher,
-                         PaymentHandler paymentHandler) {
+                         PaymentHandlerRegistry paymentHandlerRegistry) {
       this.paymentRepository = paymentRepository;
       this.paymentValidation = paymentValidation;
       this.subscriptionValidation = subscriptionValidation;
+      this.paymentHandlerRegistry = paymentHandlerRegistry;
       this.publisher = publisher;
-
-      this.paymentProcessors = paymentProcessors.stream()
-            .collect(Collectors.toMap(PaymentProcessor::getPaymentMethod, processor -> processor));
    }
 
    @Transactional
@@ -117,8 +112,8 @@ public class PaymentService {
       paymentValidation.validatePaymentNotExpired(payment);
       subscriptionValidation.validateSubscriptionNotIsCanceled(subscription);
 
-      PaymentProcessor paymentProcessor = paymentProcessors.get(payment.getMethod());
-      PaymentProcessorResponseDTO response = paymentProcessor.processPayment(requestDTO);
+      PaymentHandler paymentHandler = paymentValidation.getMethodPayment(payment.getMethod());
+      PaymentProcessorResponseDTO response = paymentHandler.processPayment(requestDTO);
 
       if (response.getSuccess()) {
          payment.setStatus(PaymentStatus.PAID);
@@ -164,4 +159,16 @@ public class PaymentService {
    public void cancelPaymentsByPlan(UUID planId) {
       paymentRepository.updateStatusByPlanId(planId, PaymentStatus.CANCELED, PaymentStatus.PENDING);
    }
+
+   @Transactional
+   public void disablePaymentMethod(String methodName) {
+      paymentHandlerRegistry.disablePaymentMethod(methodName);
+   }
+
+   @Transactional
+   public void activePaymentMethod(String methodName) {
+      paymentHandlerRegistry.activePaymentMethod(methodName);
+   }
+
+
 }

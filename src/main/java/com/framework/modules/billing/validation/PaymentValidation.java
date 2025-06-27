@@ -3,6 +3,8 @@ package com.framework.modules.billing.validation;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.framework.framework.billing.PaymentHandlerRegistry;
+import com.framework.framework.billing.handler.PaymentHandler;
 import org.springframework.stereotype.Component;
 
 import com.framework.common.enums.PaymentStatus;
@@ -15,9 +17,11 @@ import com.framework.modules.billing.repository.PaymentRepository;
 @Component
 public class PaymentValidation {
    private final PaymentRepository paymentRepository;
+   private final PaymentHandlerRegistry paymentHandlerRegistry;
 
-   public PaymentValidation(PaymentRepository paymentRepository) {
+   public PaymentValidation(PaymentRepository paymentRepository, PaymentHandlerRegistry paymentHandlerRegistry) {
       this.paymentRepository = paymentRepository;
+      this.paymentHandlerRegistry = paymentHandlerRegistry;
    }
 
    public Payment validatePaymentById(UUID id) {
@@ -40,5 +44,10 @@ public class PaymentValidation {
       if (paymentRepository.findBySubscriptionIdAndStatus(subscription.getId(), PaymentStatus.PENDING).isPresent()) {
          throw new BusinessException("Subscription already has a pending payment");
       }
+   }
+
+   public PaymentHandler getMethodPayment (String methodName) {
+      return paymentHandlerRegistry.getHandler(methodName)
+              .orElseThrow(() -> new BusinessException("Payment method not available or disabled: " + methodName));
    }
 }

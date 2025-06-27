@@ -25,7 +25,7 @@ public class PaymentMethod {
     private String name;
 
     @Column(name = "enabled", nullable = false)
-    private boolean enabled;
+    private boolean enabled = true;
 
     @Column(name = "handler_class", nullable = false)
     private String handlerClass;

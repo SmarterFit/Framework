@@ -54,7 +54,7 @@ public class Payment {
    LocalDateTime expirationIn;
 
    @Column(name = "payment_method", nullable = false)
-   PaymentMethod method;
+   String method;
 
    @Column(name = "status", nullable = false)
    @Enumerated(EnumType.STRING)
