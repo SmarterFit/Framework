@@ -1,0 +1,66 @@
+package com.framework.modules.classgroup.controller;
+
+import com.framework.common.enums.RoleType;
+import com.framework.common.security.RequireRole;
+import com.framework.modules.classgroup.dto.request.classgroup.ClassGroupRequestDTO;
+import com.framework.modules.classgroup.dto.response.ClassGroupResponseDTO;
+import com.framework.modules.classgroup.service.ClassGroupService;
+
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/turma")
+@CrossOrigin
+
+public class ClassGroupController {
+    public final ClassGroupService classGroupService;
+
+    public ClassGroupController(ClassGroupService classGroupService) {
+        this.classGroupService = classGroupService;
+    }
+
+    @RequireRole(RoleType.TRAINER)
+    @PostMapping("/cadastrar")
+    public ResponseEntity<ClassGroupResponseDTO> createClassGroup(
+            @RequestBody @Valid ClassGroupRequestDTO requestDTO,
+            @RequestHeader("X-User-Id") UUID requesterId) {
+
+        ClassGroupResponseDTO responseDTO = classGroupService.createClassGroup(requestDTO, requesterId);
+        return ResponseEntity.status(201).body(responseDTO);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ClassGroupResponseDTO> getClassGroupById(@PathVariable UUID id) {
+        return ResponseEntity.ok(classGroupService.getClassGroupById(id));
+    }
+
+    @RequireRole(RoleType.TRAINER)
+    @PutMapping("/{id}")
+    public ResponseEntity<ClassGroupResponseDTO> updateClassGroupById(
+            @PathVariable UUID id,
+            @RequestBody @Valid ClassGroupRequestDTO requestDTO) {
+        return ResponseEntity.ok(classGroupService.updateClassGroupById(id, requestDTO));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ClassGroupResponseDTO>> getAllClassGroup() {
+        return ResponseEntity.ok(classGroupService.getAllClassGroups());
+    }
+
+    @GetMapping("/available-by-user/{userId}")
+    public ResponseEntity<List<ClassGroupResponseDTO>> getAvailableClassGroupsByUserId(@PathVariable UUID userId) {
+        return ResponseEntity.ok(classGroupService.getAvailableClassGroupsByUserId(userId));
+    }
+
+    @RequireRole(RoleType.TRAINER)
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteClassGroupById(@PathVariable UUID id) {
+        classGroupService.deleteClassGroupById(id);
+        return ResponseEntity.noContent().build();
+    }
+}

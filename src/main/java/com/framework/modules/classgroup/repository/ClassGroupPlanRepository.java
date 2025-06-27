@@ -1,0 +1,25 @@
+package com.framework.modules.classgroup.repository;
+
+import com.framework.modules.classgroup.entity.ClassGroupPlan;
+import com.framework.modules.classgroup.entity.id.ClassGroupPlanId;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Repository
+public interface ClassGroupPlanRepository extends JpaRepository<ClassGroupPlan, ClassGroupPlanId> {
+
+    boolean existsByPlanIdAndClassGroupId(UUID planId, UUID classGroupId);
+
+    void deleteByPlanIdAndClassGroupId(UUID planId, UUID classGroupId);
+
+    Optional<ClassGroupPlan> findByPlanIdAndClassGroupId(UUID planId, UUID classGroupId);
+
+    List<ClassGroupPlan> findAllByClassGroupId(UUID classGroupId);
+
+
+}

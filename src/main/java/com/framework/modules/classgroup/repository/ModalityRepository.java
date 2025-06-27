@@ -1,0 +1,22 @@
+package com.framework.modules.classgroup.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import com.framework.modules.classgroup.entity.Modality;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.UUID;
+
+
+@Repository
+public interface ModalityRepository extends JpaRepository<Modality, UUID> {
+
+    @Query("select m from Modality m where m.name like %:name%")
+    List<Modality> findAllByNameContaining(@Param("name") String name);
+
+
+    boolean existsByName(String name);
+}

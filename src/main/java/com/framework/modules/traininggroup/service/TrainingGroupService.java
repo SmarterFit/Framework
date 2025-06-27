@@ -1,0 +1,164 @@
+package com.framework.modules.traininggroup.service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.framework.modules.traininggroup.dto.request.SearchTrainingGroupRequestDTO;
+import com.framework.modules.traininggroup.dto.request.CreateTrainingGroupRequestDTO;
+import com.framework.modules.traininggroup.dto.request.UpdateTrainingGroupRequestDTO;
+import com.framework.modules.traininggroup.dto.response.TrainingGroupResponseDTO;
+import com.framework.modules.traininggroup.entity.TrainingGroup;
+import com.framework.modules.traininggroup.event.TrainingGroupRestartedEvent;
+import com.framework.modules.traininggroup.mapper.TrainingGroupMapper;
+import com.framework.modules.traininggroup.repository.TrainingGroupRepository;
+import com.framework.modules.traininggroup.repository.TrainingGroupUserRepository;
+import com.framework.modules.traininggroup.specification.TrainingGroupSpecifications;
+import com.framework.modules.traininggroup.util.DateTimeAdjustmentUtil;
+import com.framework.modules.traininggroup.validation.TrainingGroupValidation;
+import com.framework.modules.useraccess.entity.User;
+import com.framework.modules.useraccess.validation.UserValidation;
+
+@Service
+public class TrainingGroupService {
+   private final TrainingGroupRepository trainingGroupRepository;
+   private final TrainingGroupValidation trainingGroupValidation;
+   private final UserValidation userValidation;
+   private final ApplicationEventPublisher publisher;
+
+   @Autowired
+   public TrainingGroupService(TrainingGroupRepository trainingGroupRepository,
+         TrainingGroupUserRepository trainingGroupUserRepository,
+         TrainingGroupValidation trainingGroupValidation,
+         UserValidation userValidation,
+         ApplicationEventPublisher publisher) {
+      this.trainingGroupRepository = trainingGroupRepository;
+      this.trainingGroupValidation = trainingGroupValidation;
+      this.userValidation = userValidation;
+      this.publisher = publisher;
+   }
+
+   @Transactional
+   public TrainingGroupResponseDTO createTrainingGroup(CreateTrainingGroupRequestDTO requestDTO) {
+      DateTimeAdjustmentUtil.adjustTrainingGroupDateRange(requestDTO);
+      trainingGroupValidation.validateFutureDateRange(requestDTO.getStartDate(), requestDTO.getEndDate());
+
+      User user = userValidation.validateUserById(requestDTO.getOwnerId());
+      TrainingGroup trainingGroup = TrainingGroupMapper.toEntity(requestDTO, user);
+
+      String slug = trainingGroupValidation.generateUniqueSlug(trainingGroup.getName());
+      trainingGroup.setSlug(slug);
+
+      trainingGroup = trainingGroupRepository.save(trainingGroup);
+
+      return TrainingGroupMapper.toResponse(trainingGroup);
+   }
+
+   @Transactional(readOnly = true)
+   public TrainingGroupResponseDTO getTrainingGroupById(UUID id) {
+      TrainingGroup trainingGroup = trainingGroupValidation.validateTrainingGroupById(id);
+      return TrainingGroupMapper.toResponse(trainingGroup);
+   }
+
+   @Transactional(readOnly = true)
+   public TrainingGroupResponseDTO getTrainingGroupBySlug(String slug) {
+      TrainingGroup trainingGroup = trainingGroupValidation.validateTrainingGroupBySlug(slug);
+      return TrainingGroupMapper.toResponse(trainingGroup);
+   }
+
+   @Transactional(readOnly = true)
+   public List<TrainingGroupResponseDTO> getAllTrainingGroups() {
+      List<TrainingGroup> trainingGroups = trainingGroupRepository.findAll();
+      return trainingGroups.stream()
+            .map(TrainingGroupMapper::toResponse)
+            .toList();
+   }
+
+   @Transactional(readOnly = true)
+   public Page<TrainingGroupResponseDTO> searchTrainingGroups(
+         SearchTrainingGroupRequestDTO requestDTO, Pageable pageable) {
+      Specification<TrainingGroup> specification = TrainingGroupSpecifications
+            .searchByFilters(requestDTO);
+
+      Page<TrainingGroup> trainingGroups = trainingGroupRepository.findAll(specification, pageable);
+
+      return trainingGroups.map(TrainingGroupMapper::toResponse);
+   }
+
+   @Transactional
+   public TrainingGroupResponseDTO updateTrainingGroup(UUID id,
+         UpdateTrainingGroupRequestDTO requestDTO) {
+      TrainingGroup trainingGroup = trainingGroupValidation.validateTrainingGroupById(id);
+      DateTimeAdjustmentUtil.adjustTrainingGroupDateRange(requestDTO);
+
+      trainingGroup = TrainingGroupMapper.toEntity(requestDTO, trainingGroup);
+      trainingGroupValidation.validateTrainingGroupDateRange(trainingGroup);
+
+      trainingGroup = trainingGroupRepository.save(trainingGroup);
+
+      return TrainingGroupMapper.toResponse(trainingGroup);
+   }
+
+   @Transactional
+   public void deleteTrainingGroup(UUID id) {
+      TrainingGroup trainingGroup = trainingGroupValidation.validateTrainingGroupById(id);
+      deleteTrainingGroup(trainingGroup);
+   }
+
+   @Transactional
+   public void deleteTrainingGroup(TrainingGroup trainingGroup) {
+      trainingGroupRepository.delete(trainingGroup);
+   }
+
+   @Transactional
+   public TrainingGroupResponseDTO activateTrainingGroup(UUID groupId) {
+      TrainingGroup trainingGroup = trainingGroupValidation.validateTrainingGroupById(groupId);
+
+      trainingGroupValidation.validateTrainingGroupNotActive(trainingGroup);
+
+      if (!trainingGroupValidation.validateTrainingGroupStarted(trainingGroup)) {
+         trainingGroup.setStartDate(LocalDateTime.now());
+      }
+
+      if (trainingGroupValidation.validateTrainingGroupEnded(trainingGroup)) {
+         trainingGroup.setEndDate(null);
+      }
+
+      trainingGroupRepository.save(trainingGroup);
+
+      return TrainingGroupMapper.toResponse(trainingGroup);
+   }
+
+   @Transactional
+   public TrainingGroupResponseDTO finishTrainingGroup(UUID groupId) {
+      TrainingGroup trainingGroup = trainingGroupValidation.validateTrainingGroupById(groupId);
+
+      trainingGroupValidation.validateTrainingGroupActive(trainingGroup);
+
+      trainingGroup.setEndDate(LocalDateTime.now());
+      trainingGroupRepository.save(trainingGroup);
+
+      return TrainingGroupMapper.toResponse(trainingGroup);
+   }
+
+   @Transactional
+   public TrainingGroupResponseDTO restartTrainingGroup(UUID groupId) {
+      TrainingGroup trainingGroup = trainingGroupValidation.validateTrainingGroupById(groupId);
+
+      trainingGroup.setStartDate(LocalDateTime.now());
+      trainingGroup.setEndDate(null);
+      trainingGroupRepository.save(trainingGroup);
+
+      publisher.publishEvent(new TrainingGroupRestartedEvent(trainingGroup));
+
+      return TrainingGroupMapper.toResponse(trainingGroup);
+   }
+}

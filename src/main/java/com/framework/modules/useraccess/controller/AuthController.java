@@ -1,0 +1,29 @@
+package com.framework.modules.useraccess.controller;
+
+import com.framework.modules.useraccess.dto.request.user.LoginRequestDTO;
+import com.framework.modules.useraccess.dto.response.AuthResponseDTO;
+import com.framework.modules.useraccess.service.AuthService;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/auth")
+@CrossOrigin
+public class AuthController {
+
+    private final AuthService authService;
+
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginRequestDTO requestDTO) {
+        return ResponseEntity.ok(authService.login(requestDTO));
+    }
+}

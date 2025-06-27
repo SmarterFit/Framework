@@ -1,0 +1,42 @@
+package com.framework.modules.training.validation;
+
+import com.framework.common.exceptions.ResourceAlreadyExistsException;
+import com.framework.common.exceptions.ResourceNotFoundException;
+import com.framework.modules.training.entity.TrainingGoal;
+import com.framework.modules.training.repository.TrainingGoalRepository;
+import org.springframework.stereotype.Component;
+
+import java.util.UUID;
+
+@Component
+public class TrainingGoalValidation {
+
+    private final TrainingGoalRepository trainingGoalRepository;
+
+    public TrainingGoalValidation(TrainingGoalRepository trainingGoalRepository) {
+        this.trainingGoalRepository = trainingGoalRepository;
+    }
+
+    public TrainingGoal validateTrainingGoalById(UUID id) {
+        return trainingGoalRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("TrainingGoal not found"));
+    }
+
+    public TrainingGoal validateTrainingGoalByUserId(UUID userId) {
+        return trainingGoalRepository.findByUserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("TrainingGoal not found for this user"));
+    }
+
+    public void existsTrainingGoalById(UUID id) {
+        if (trainingGoalRepository.existsById(id)) {
+            throw new ResourceAlreadyExistsException("TrainingGoal already exists");
+        }
+    }
+
+    public void existsTrainingGoalByUserId(UUID id) {
+        if (trainingGoalRepository.existsByUserId(id)) {
+            throw new ResourceAlreadyExistsException("TrainingGoal already exists for this user");
+        }
+    }
+
+}
