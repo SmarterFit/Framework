@@ -15,7 +15,6 @@ import com.framework.modules.billing.entity.Payment;
 import com.framework.modules.billing.entity.Subscription;
 import com.framework.modules.billing.event.PaymentConfirmedEvent;
 import com.framework.modules.billing.mapper.PaymentMapper;
-import com.framework.modules.billing.processor.PaymentProcessor;
 import com.framework.modules.billing.repository.PaymentRepository;
 import com.framework.modules.billing.specification.PaymentSpecifications;
 import com.framework.modules.billing.validation.PaymentValidation;
@@ -43,7 +42,6 @@ public class PaymentService {
    @Autowired
    public PaymentService(PaymentRepository paymentRepository,
                          PaymentValidation paymentValidation,
-                         List<PaymentProcessor> paymentProcessors,
                          SubscriptionValidation subscriptionValidation, ApplicationEventPublisher publisher,
                          PaymentHandlerRegistry paymentHandlerRegistry) {
       this.paymentRepository = paymentRepository;

@@ -5,10 +5,11 @@ import com.framework.framework.billing.entity.PaymentMethod;
 import com.framework.framework.billing.handler.PaymentHandler;
 import com.framework.framework.billing.repository.PaymentMethodRepository;
 import jakarta.annotation.PostConstruct;
+
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-
 
 @Component
 public class PaymentHandlerRegistry {
@@ -27,12 +28,11 @@ public class PaymentHandlerRegistry {
     }
 
     @PostConstruct
+    @Transactional
     public void init() {
         System.out.println("Enabled methods from properties: " + paymentProperties.getEnabledMethods());
         initializeActiveHandlers();
     }
-
-
 
     private void initializeActiveHandlers() {
         Set<String> enabledSet = new HashSet<>(paymentProperties.getEnabledMethods());
@@ -44,11 +44,8 @@ public class PaymentHandlerRegistry {
             method.setName(methodName);
             method.setEnabled(enabledSet.contains(methodName));
             method.setHandlerClass(handler.getClass().getName());
-            method.setEnabled(true);
             methodRepository.save(method);
             activeHandlers.put(methodName, handler);
-
-
         }
 
         deactivateUnavailableMethods();

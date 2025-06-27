@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.framework.common.enums.PaymentMethod;
 import com.framework.common.enums.PaymentStatus;
 
 import jakarta.persistence.Column;
