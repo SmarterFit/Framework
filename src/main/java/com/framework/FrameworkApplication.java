@@ -28,7 +28,7 @@ public class FrameworkApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
-		System.out.println("Framework API is running");
+		System.out.println("SmarterFit API is running");
 		System.out.println("Acesse: http://localhost:8081/");
 	}
 }

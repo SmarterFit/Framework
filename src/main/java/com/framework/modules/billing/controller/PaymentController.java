@@ -7,7 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.framework.modules.billing.dto.request.payment.CreatePaymentRequestDTO;
 import com.framework.modules.billing.dto.request.payment.ProcessorPaymentRequestDTO;
@@ -88,18 +96,6 @@ public class PaymentController {
    @PatchMapping("/{id}/cancelar")
    public ResponseEntity<Void> cancelPayment(@PathVariable UUID id) {
       paymentService.cancelPayment(id);
-      return ResponseEntity.noContent().build();
-   }
-
-   @PutMapping("/desativar-metodo/{methodName}")
-   public ResponseEntity<Void> disablePaymentMethod(@PathVariable String methodName) {
-      paymentService.disablePaymentMethod(methodName);
-      return ResponseEntity.noContent().build();
-   }
-
-   @PutMapping("/ativar-metodo/{methodName}")
-   public ResponseEntity<Void> activePaymentMethod(@PathVariable String methodName) {
-      paymentService.activePaymentMethod(methodName);
       return ResponseEntity.noContent().build();
    }
 }

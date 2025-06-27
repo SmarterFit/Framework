@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.framework.common.enums.PaymentMethod;
 import com.framework.common.enums.PaymentStatus;
 
 import jakarta.persistence.Column;
@@ -53,7 +54,7 @@ public class Payment {
    LocalDateTime expirationIn;
 
    @Column(name = "payment_method", nullable = false)
-   String method;
+   PaymentMethod method;
 
    @Column(name = "status", nullable = false)
    @Enumerated(EnumType.STRING)

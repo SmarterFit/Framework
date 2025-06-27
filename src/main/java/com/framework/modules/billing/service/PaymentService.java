@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.framework.framework.billing.PaymentHandlerRegistry;
 import com.framework.framework.billing.handler.PaymentHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -42,7 +41,6 @@ public class PaymentService {
    private final PaymentValidation paymentValidation;
    private final SubscriptionValidation subscriptionValidation;
    private final Map<PaymentMethod, PaymentProcessor> paymentProcessors;
-   private final PaymentHandlerRegistry paymentHandlerRegistry;
    private final ApplicationEventPublisher publisher;
 
    @Autowired
@@ -50,11 +48,10 @@ public class PaymentService {
                          PaymentValidation paymentValidation,
                          List<PaymentProcessor> paymentProcessors,
                          SubscriptionValidation subscriptionValidation, ApplicationEventPublisher publisher,
-                         PaymentHandlerRegistry paymentHandlerRegistry) {
+                         PaymentHandler paymentHandler) {
       this.paymentRepository = paymentRepository;
       this.paymentValidation = paymentValidation;
       this.subscriptionValidation = subscriptionValidation;
-      this.paymentHandlerRegistry = paymentHandlerRegistry;
       this.publisher = publisher;
 
       this.paymentProcessors = paymentProcessors.stream()
@@ -120,11 +117,8 @@ public class PaymentService {
       paymentValidation.validatePaymentNotExpired(payment);
       subscriptionValidation.validateSubscriptionNotIsCanceled(subscription);
 
-//      PaymentProcessor paymentProcessor = paymentProcessors.get(payment.getMethod());
-      PaymentHandler paymentHandler = paymentValidation.availablePaymentMethod(payment.getMethod());
-
-
-      PaymentProcessorResponseDTO response = paymentHandler.processPayment(requestDTO);
+      PaymentProcessor paymentProcessor = paymentProcessors.get(payment.getMethod());
+      PaymentProcessorResponseDTO response = paymentProcessor.processPayment(requestDTO);
 
       if (response.getSuccess()) {
          payment.setStatus(PaymentStatus.PAID);
@@ -140,17 +134,6 @@ public class PaymentService {
          throw new BusinessException("Payment failed: " + response.getMessage());
       }
    }
-
-   @Transactional
-   public void disablePaymentMethod(String methodName) {
-      paymentHandlerRegistry.disablePaymentMethod(methodName);
-   }
-
-   @Transactional
-   public void activePaymentMethod(String methodName) {
-      paymentHandlerRegistry.activePaymentMethod(methodName);
-   }
-
 
    @Transactional
    public void cancelPayment(UUID id) {
