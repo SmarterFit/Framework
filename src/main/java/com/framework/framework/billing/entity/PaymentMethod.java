@@ -25,6 +25,7 @@ public class PaymentMethod {
     private String name;
 
     @Column(name = "enabled", nullable = false)
+    @Builder.Default
     private boolean enabled = true;
 
     @Column(name = "handler_class", nullable = false)
