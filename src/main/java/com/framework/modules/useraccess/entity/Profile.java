@@ -3,6 +3,7 @@ package com.framework.modules.useraccess.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.framework.common.enums.Gender;
 
+import com.framework.framework.usermetric.entity.generic.AbstractMetricRecord;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -48,7 +49,7 @@ public class Profile {
     private Address address;
 
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<ProfileMetric> profileMetrics = new HashSet<ProfileMetric>();
+    private Set<AbstractMetricRecord> profileMetrics = new HashSet<AbstractMetricRecord>();
 
     @Column(name = "dt_created_at", nullable = false, updatable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
