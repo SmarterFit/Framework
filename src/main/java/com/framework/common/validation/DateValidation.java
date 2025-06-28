@@ -17,6 +17,12 @@ public final class DateValidation {
             checkFuture(start, "date");
     }
 
+    public static void notAllowFuture(LocalDate date) {
+        if (date.isAfter(LocalDate.now())) {
+            throw new InvalidDateException("Date " + " not must be in the future.");
+        }
+    }
+
     // VALIDATE LOCALDATETIME
     public static void validateDateTimeRange(LocalDateTime start, LocalDateTime end, boolean allowPast) {
         requireNonNull(start, end, "date-time");

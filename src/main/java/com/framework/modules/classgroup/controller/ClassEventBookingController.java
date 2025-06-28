@@ -42,6 +42,7 @@ public class ClassEventBookingController {
         return ResponseEntity.ok(classEventBookingService.updateClassEventBookingById(requestDTO));
     }
 
+
     @GetMapping("/reservas/{classEventId}/usuarios")
     public ResponseEntity<List<ClassEventBookingResponseDTO>> getClassEventBookingsByClassEventId(
             @PathVariable UUID classEventId) {

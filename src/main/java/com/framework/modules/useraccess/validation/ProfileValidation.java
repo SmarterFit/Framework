@@ -29,6 +29,12 @@ public class ProfileValidation {
         return profileRepository.existsById(id);
     }
 
+    public void validateProfileByIdOrThrow(UUID id) {
+        if(profileRepository.existsById(id)){
+            throw new ResourceNotFoundException("Profile not found with id: " + id);
+        }
+    }
+
     public void validateCpfAvailability(String cpf) {
         profileRepository.findByCpf(cpf).ifPresent(p -> {
             throw new ResourceAlreadyExistsException("CPF is already in use.");
