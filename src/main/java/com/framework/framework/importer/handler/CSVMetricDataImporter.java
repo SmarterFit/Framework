@@ -1,5 +1,4 @@
-package com.framework.framework.usermetric.importer.handler;
-
+package com.framework.framework.importer.handler;
 
 import com.framework.common.enums.SourceType;
 import com.framework.common.exceptions.BusinessException;
@@ -14,8 +13,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class CSVMetricDataImporter implements MetricDataImporterHandler {
@@ -28,8 +26,11 @@ public class CSVMetricDataImporter implements MetricDataImporterHandler {
              CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim())) {
 
             for (CSVRecord record : csvParser) {
-                MetricDataDTO dto = new MetricDataDTO();
-//                dto.setMetricType(record.get("metricType"));
+                // Converte cada linha CSV em um Map<String, Object>
+                Map<String, Object> dataMap = new HashMap<>();
+                record.toMap().forEach((key, value) -> dataMap.put(key, value));
+
+                MetricDataDTO dto = new MetricDataDTO(dataMap);
                 result.add(dto);
             }
 

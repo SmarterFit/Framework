@@ -1,4 +1,4 @@
-package com.framework.framework.usermetric.importer;
+package com.framework.framework.billing.registry;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,8 +11,9 @@ import java.util.List;
 @Getter
 @Setter
 @Component
-@ConfigurationProperties(prefix = "import")
-public class ImportProperties {
+@ConfigurationProperties(prefix = "payment")
+public class PaymentProperties {
     private List<String> enabledMethods = new ArrayList<>();
+
 
 }

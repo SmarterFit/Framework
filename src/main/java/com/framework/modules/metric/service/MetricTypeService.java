@@ -9,6 +9,7 @@ import com.framework.modules.metric.validation.MetricTypeValidation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -37,6 +38,14 @@ public class MetricTypeService {
     public MetricTypeResponseDTO getMetricTypeById(UUID id) {
         MetricType metricType = metricTypeValidation.validateMetricTypeById(id);
         return MetricTypeMapper.toResponse(metricType);
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<MetricTypeResponseDTO> getAllMetricsType() {
+        List<MetricType> metricTypes = metricTypeRepository.findAll();
+
+        return  metricTypes.stream().map(MetricTypeMapper::toResponse).toList();
     }
 
     @Transactional

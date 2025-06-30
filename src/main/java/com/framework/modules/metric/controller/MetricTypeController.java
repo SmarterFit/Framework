@@ -9,10 +9,12 @@ import com.framework.modules.metric.service.MetricTypeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
+@CrossOrigin
 @RestController
-@RequestMapping("/metric-type")
+@RequestMapping("/metrica/tipo")
 public class MetricTypeController {
 
     private final MetricTypeService metricTypeService;
@@ -22,7 +24,7 @@ public class MetricTypeController {
     }
 
     @RequireRole(RoleType.ADMIN)
-    @PostMapping
+    @PostMapping("/cadastrar")
     public ResponseEntity<MetricTypeResponseDTO> createMetricType(@RequestBody MetricTypeRequestDTO requestDTO) {
         MetricTypeResponseDTO response = metricTypeService.createMetricType(requestDTO);
         return ResponseEntity.ok(response);
@@ -32,6 +34,12 @@ public class MetricTypeController {
     public ResponseEntity<MetricTypeResponseDTO> getMetricTypeById(@PathVariable UUID id) {
         MetricTypeResponseDTO response = metricTypeService.getMetricTypeById(id);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<MetricTypeResponseDTO>> getMetricTypeById() {
+        List<MetricTypeResponseDTO> list = metricTypeService.getAllMetricsType();
+        return ResponseEntity.ok(list);
     }
 
     @RequireRole(RoleType.ADMIN)

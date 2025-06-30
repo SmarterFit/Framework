@@ -1,8 +1,14 @@
 package com.framework.modules.metric.dto.response;
 
-import java.time.LocalDateTime;
+import lombok.*;
+
 import java.util.UUID;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class MetricTypeResponseDTO {
     private UUID id;
     private String type;
@@ -10,5 +16,4 @@ public class MetricTypeResponseDTO {
     private double minThreshold;
     private double maxThreshold;
     private boolean enabled;
-    private LocalDateTime createdAt;
 }

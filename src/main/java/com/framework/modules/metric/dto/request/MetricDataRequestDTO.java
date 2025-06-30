@@ -2,15 +2,15 @@ package com.framework.modules.metric.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Map;
 
 @Getter
 @Setter
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class MetricDataRequestDTO {
 
     @NotBlank(message = "Metric type is required")

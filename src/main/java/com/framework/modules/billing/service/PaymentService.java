@@ -3,7 +3,7 @@ package com.framework.modules.billing.service;
 import com.framework.common.config.BusinessRules;
 import com.framework.common.enums.PaymentStatus;
 import com.framework.common.exceptions.BusinessException;
-import com.framework.framework.billing.PaymentHandlerRegistry;
+import com.framework.framework.billing.registry.PaymentHandlerRegistry;
 import com.framework.framework.billing.handler.PaymentHandler;
 import com.framework.modules.billing.dto.request.payment.CreatePaymentRequestDTO;
 import com.framework.modules.billing.dto.request.payment.ProcessorPaymentRequestDTO;

@@ -1,10 +1,10 @@
 package com.framework.modules.metric.validation;
 
 import com.framework.common.exceptions.BusinessException;
-import com.framework.framework.usermetric.importer.ImportHandlerRegistry;
-import com.framework.framework.usermetric.importer.handler.MetricDataImporterHandler;
-import com.framework.framework.usermetric.metric.MetricHandlerRegistry;
-import com.framework.framework.usermetric.metric.handler.MetricHandler;
+import com.framework.framework.importer.registry.ImportHandlerRegistry;
+import com.framework.framework.importer.handler.MetricDataImporterHandler;
+import com.framework.framework.usermetric.registry.MetricHandlerRegistry;
+import com.framework.framework.usermetric.handler.MetricHandler;
 import org.springframework.stereotype.Component;
 
 @Component

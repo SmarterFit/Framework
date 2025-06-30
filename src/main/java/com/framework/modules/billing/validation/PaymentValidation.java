@@ -3,7 +3,7 @@ package com.framework.modules.billing.validation;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.framework.framework.billing.PaymentHandlerRegistry;
+import com.framework.framework.billing.registry.PaymentHandlerRegistry;
 import com.framework.framework.billing.handler.PaymentHandler;
 import org.springframework.stereotype.Component;
 

@@ -12,7 +12,7 @@ import java.time.format.DateTimeParseException;
 public class NotFutureDateValidation implements MetricValidationStep {
 
     private final String fieldName;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
 
     public NotFutureDateValidation(String fieldName) {
@@ -33,7 +33,7 @@ public class NotFutureDateValidation implements MetricValidationStep {
             DateValidation.notAllowFuture(date);
             context.putNormalized(fieldName, date);
         } catch (DateTimeParseException e) {
-            throw new InvalidDateException("Field '" + fieldName + "' must be in the format yyyy-MM-dd.");
+            throw new InvalidDateException("Field '" + fieldName + "' must be in the format dd-MM-yyyy.");
         }
     }
 }

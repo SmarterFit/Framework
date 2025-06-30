@@ -1,8 +1,8 @@
 package com.framework.framework.usermetric.entity;
 
 import com.framework.framework.usermetric.entity.generic.AbstractMetricRecord;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import com.framework.modules.classgroup.entity.ClassGroup;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +19,10 @@ import java.util.Map;
 public class GradeMetricRecord extends AbstractMetricRecord {
 
     private double grade;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "class_group_id")
+    private ClassGroup classGroup;
 
     @Override
     public double getValue() {

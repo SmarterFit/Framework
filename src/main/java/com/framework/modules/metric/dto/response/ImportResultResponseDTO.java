@@ -1,13 +1,13 @@
 package com.framework.modules.metric.dto.response;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class ImportResultResponseDTO {
     private int totalRecords;

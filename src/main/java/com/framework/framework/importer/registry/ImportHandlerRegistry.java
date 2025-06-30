@@ -1,7 +1,7 @@
-package com.framework.framework.usermetric.importer;
+package com.framework.framework.importer.registry;
 
 
-import com.framework.framework.usermetric.importer.handler.MetricDataImporterHandler;
+import com.framework.framework.importer.handler.MetricDataImporterHandler;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

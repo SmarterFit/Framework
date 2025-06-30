@@ -5,6 +5,7 @@ import com.framework.framework.usermetric.entity.generic.AbstractMetricRecord;
 import com.framework.modules.metric.dto.request.ImportMetricRequestDTO;
 import com.framework.modules.metric.dto.request.MetricDataRequestDTO;
 import com.framework.modules.metric.dto.response.ImportResultResponseDTO;
+import com.framework.modules.metric.dto.response.MetricDataResponseDTO;
 import com.framework.modules.metric.service.UserMetricService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +15,9 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
+@CrossOrigin
 @RestController
-@RequestMapping("/perfis/metricas")
+@RequestMapping("/metrica")
 public class UserMetricController {
 
     private final UserMetricService userMetricService;
@@ -25,31 +27,41 @@ public class UserMetricController {
     }
 
 
-    @PostMapping("/import")
+    @PostMapping("/importar")
     public ResponseEntity<ImportResultResponseDTO> importMetrics(
             @RequestParam("file") MultipartFile file,
-            @RequestBody  @Valid ImportMetricRequestDTO importMetricRequestDTO,
+            @RequestHeader("metricType") String metricType,
             @RequestHeader("X-User-Id") UUID requesterId) {
 
-        ImportResultResponseDTO result = userMetricService.importMetrics(file, importMetricRequestDTO, requesterId);
+        ImportResultResponseDTO result = userMetricService.importMetrics(file, metricType, requesterId);
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/listar/{metricTypeId}")
-    public ResponseEntity<List<AbstractMetricRecord>> getMetricsByProfileAndType(
-             @RequestParam("metricTypeId") UUID metricTypeId,
+    @GetMapping("/listar/tipo/id/{metricTypeId}")
+    public ResponseEntity<List<MetricDataResponseDTO>> getMetricsByProfileAndType(
+             @PathVariable("metricTypeId") UUID metricTypeId,
             @RequestHeader("X-User-Id") UUID requesterId) {
 
-        List<AbstractMetricRecord> result = userMetricService.getMetricsByProfileAndType(requesterId, metricTypeId);
+        List<MetricDataResponseDTO> result = userMetricService.getMetricsByProfileAndType(requesterId, metricTypeId);
         return ResponseEntity.ok(result);
     }
 
-    @PutMapping("/adicionar")
-    public ResponseEntity<AbstractMetricRecord> addMetric(
+    @GetMapping("/listar/tipo/nome/{nameMetricType}")
+    public ResponseEntity<List<MetricDataResponseDTO>> getMetricsByProfileAndTypeByName(
+            @PathVariable("nameMetricType") String nameMetricType,
+            @RequestHeader("X-User-Id") UUID requesterId) {
+
+        List<MetricDataResponseDTO> result = userMetricService.getMetricsByProfileAndTypeByName(requesterId, nameMetricType);
+        return ResponseEntity.ok(result);
+    }
+
+
+    @PostMapping("/adicionar")
+    public ResponseEntity<MetricDataResponseDTO> addMetric(
             @RequestBody @Valid MetricDataRequestDTO metricDataRequestDTO,
             @RequestHeader("X-User-Id") UUID requesterId) {
 
-        AbstractMetricRecord result = userMetricService.addMetric(requesterId, metricDataRequestDTO);
+        MetricDataResponseDTO result = userMetricService.addMetric(requesterId, metricDataRequestDTO);
         return ResponseEntity.status(201).body(result);
     }
 

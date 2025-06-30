@@ -30,7 +30,7 @@ public class ProfileValidation {
     }
 
     public void validateProfileByIdOrThrow(UUID id) {
-        if(profileRepository.existsById(id)){
+        if(!profileRepository.existsById(id)){
             throw new ResourceNotFoundException("Profile not found with id: " + id);
         }
     }

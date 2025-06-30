@@ -1,6 +1,6 @@
 package com.framework;
 
-import com.framework.framework.billing.PaymentProperties;
+import com.framework.framework.billing.registry.PaymentProperties;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

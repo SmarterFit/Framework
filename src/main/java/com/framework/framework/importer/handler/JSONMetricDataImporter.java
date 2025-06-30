@@ -1,4 +1,4 @@
-package com.framework.framework.usermetric.importer.handler;
+package com.framework.framework.importer.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.framework.common.enums.SourceType;

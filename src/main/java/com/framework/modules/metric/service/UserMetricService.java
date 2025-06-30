@@ -1,17 +1,16 @@
 package com.framework.modules.metric.service;
 
+import com.framework.framework.usermetric.entity.generic.AbstractMetricRecord;
+import com.framework.framework.usermetric.entity.generic.MetricType;
+import com.framework.framework.importer.handler.MetricDataImporterHandler;
+import com.framework.framework.usermetric.handler.MetricHandler;
 import com.framework.framework.usermetric.validation.AbstractMetricValidation;
-import com.framework.modules.metric.dto.request.ImportMetricRequestDTO;
+import com.framework.framework.usermetric.entity.MetricProcessResult;
+import com.framework.framework.importer.validation.FileTypeValidator;
 import com.framework.modules.metric.dto.request.MetricDataDTO;
 import com.framework.modules.metric.dto.request.MetricDataRequestDTO;
 import com.framework.modules.metric.dto.response.ImportResultResponseDTO;
-import com.framework.framework.usermetric.entity.generic.AbstractMetricRecord;
-import com.framework.framework.usermetric.entity.generic.MetricType;
-import com.framework.framework.usermetric.importer.ImportHandlerRegistry;
-import com.framework.framework.usermetric.importer.handler.MetricDataImporterHandler;
-import com.framework.framework.usermetric.metric.MetricHandlerRegistry;
-import com.framework.framework.usermetric.metric.handler.MetricHandler;
-import com.framework.modules.metric.repository.MetricTypeRepository;
+import com.framework.modules.metric.dto.response.MetricDataResponseDTO;
 import com.framework.modules.metric.repository.UserMetricRepository;
 import com.framework.modules.metric.validation.MetricTypeValidation;
 import com.framework.modules.metric.validation.UserMetricValidation;
@@ -31,67 +30,99 @@ public class UserMetricService {
     private final MetricTypeValidation metricTypeValidation;
     private final ProfileValidation profileValidation;
     private final AbstractMetricValidation abstractMetricValidation;
+    private final FileTypeValidator fileTypeValidator;
 
     public UserMetricService(UserMetricRepository userMetricRepository,
                              UserMetricValidation importDataMetricValidation,
                              MetricTypeValidation metricTypeValidation,
                              ProfileValidation profileValidation,
-                             AbstractMetricValidation abstractMetricValidation) {
+                             AbstractMetricValidation abstractMetricValidation,
+                             FileTypeValidator fileTypeValidator) {
         this.userMetricRepository = userMetricRepository;
         this.userMetricValidation = importDataMetricValidation;
         this.metricTypeValidation = metricTypeValidation;
         this.profileValidation = profileValidation;
         this.abstractMetricValidation = abstractMetricValidation;
+        this.fileTypeValidator = fileTypeValidator;
+
     }
 
 
     @Transactional
-    public ImportResultResponseDTO importMetrics(MultipartFile file, ImportMetricRequestDTO importMetricRequestDTO, UUID requesterId) {
+    public ImportResultResponseDTO importMetrics(MultipartFile file, String type, UUID requesterId) {
 
         Profile profile = profileValidation.validateProfileById(requesterId);
-        MetricType metricType = metricTypeValidation.findMetricByType(importMetricRequestDTO.getMetricType());
-        MetricDataImporterHandler importerHandler = userMetricValidation.getImporter(importMetricRequestDTO.getSourceType());
-        List<MetricDataDTO> metricsDataDTO = importerHandler.parseFile(file);
-        MetricHandler metricHandler = userMetricValidation.getMetricHandler(importMetricRequestDTO.getMetricType());
+        MetricType metricType = metricTypeValidation.findMetricByType(type);
 
-        List<AbstractMetricRecord> metrics = metricsDataDTO.stream()
-                .map(metricDataDTO -> {
-                    return  metricHandler.handle(metricDataDTO,
-                            metricType,
-                            profile,
-                            importMetricRequestDTO.getSourceType());
-                })
+        String sourceType = fileTypeValidator.validateAndGetImportMethod(file);
+
+        MetricDataImporterHandler importerHandler = userMetricValidation.getImporter(sourceType);
+        List<MetricDataDTO> metricsDataDTO = importerHandler.parseFile(file);
+
+        MetricHandler metricHandler = userMetricValidation.getMetricHandler(type);
+
+        List<MetricProcessResult> metrics = metricsDataDTO.stream()
+                .map(metricDataDTO -> metricHandler.handle(
+                        metricDataDTO,
+                        metricType,
+                        profile,
+                        sourceType))
                 .toList();
 
-        userMetricRepository.saveAll(metrics);
+        userMetricRepository.saveAll(metrics.stream().map(MetricProcessResult::getRecord).toList());
+
+        List<String> allAlerts = metrics.stream()
+                .flatMap(result -> result.getAlerts().stream())
+                .toList();
+
 
         return ImportResultResponseDTO.builder()
                 .totalRecords(metrics.size())
-                .errorMessages(metricHandler.alerts())
+                .errorMessages(allAlerts)
                 .build();
     }
 
+
     @Transactional
-    public List<AbstractMetricRecord> getMetricsByProfileAndType(UUID profileId, UUID metricTypeId) {
+    public List<MetricDataResponseDTO> getMetricsByProfileAndType(UUID profileId, UUID metricTypeId) {
         profileValidation.validateProfileByIdOrThrow(profileId);
-        MetricType type = metricTypeValidation.findMetricById(metricTypeId);
-        return userMetricRepository.findByProfileIdAndMetricTypeId(profileId, type.getId());
+        MetricType metricType = metricTypeValidation.findMetricById(metricTypeId);
+        MetricHandler handler = userMetricValidation.getMetricHandler(metricType.getType());
+        List<AbstractMetricRecord> list = userMetricRepository.findByProfileIdAndMetricTypeId(profileId, metricType.getId());
+
+        return list.stream()
+                .map(handler::toResponseDTO)
+                .toList();
+    }
+
+
+    @Transactional
+    public List<MetricDataResponseDTO> getMetricsByProfileAndTypeByName(UUID profileId, String metricTypeName) {
+        profileValidation.validateProfileByIdOrThrow(profileId);
+        MetricType metricType = metricTypeValidation.findMetricByType(metricTypeName);
+        MetricHandler handler = userMetricValidation.getMetricHandler(metricType.getType());
+        List<AbstractMetricRecord> list = userMetricRepository.findByProfileIdAndMetricTypeId(profileId, metricType.getId());
+
+        return list.stream()
+                .map(handler::toResponseDTO)
+                .toList();
     }
 
     @Transactional
-    public AbstractMetricRecord addMetric(UUID userId, MetricDataRequestDTO requestDTO) {
+    public MetricDataResponseDTO addMetric(UUID userId, MetricDataRequestDTO requestDTO) {
         Profile profile = profileValidation.validateProfileById(userId);
 
         MetricType metricType = metricTypeValidation.findMetricByType(requestDTO.getMetricType());
         MetricHandler handler = userMetricValidation.getMetricHandler(requestDTO.getMetricType());
 
-        AbstractMetricRecord metricRecord = handler.handle(new MetricDataDTO(requestDTO.getData()),
+        MetricProcessResult result = handler.handle(new MetricDataDTO(requestDTO.getData()),
                 metricType,
                 profile,
                 requestDTO.getSource());
 
 
-        return userMetricRepository.save(metricRecord);
+        userMetricRepository.save(result.getRecord());
+        return result.getResponse();
     }
 
     @Transactional

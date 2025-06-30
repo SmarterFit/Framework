@@ -1,34 +1,31 @@
-package com.framework.framework.usermetric.metric.handler;
+package com.framework.framework.usermetric.handler;
 
-import com.framework.framework.usermetric.entity.WeightMetricRecord;
+import com.framework.framework.usermetric.entity.generic.GenericMetricRecord;
 import com.framework.framework.usermetric.entity.generic.AbstractMetricRecord;
 import com.framework.framework.usermetric.entity.generic.MetricType;
 import com.framework.framework.usermetric.validation.MetricValidationContext;
 import com.framework.framework.usermetric.validation.chain.MetricValidationChain;
-import com.framework.framework.usermetric.validation.chain.NotFutureDateValidation;
 import com.framework.framework.usermetric.validation.chain.NumericRangeValidation;
 import com.framework.framework.usermetric.validation.chain.RequiredFieldValidation;
 import com.framework.modules.metric.dto.request.MetricDataDTO;
+import com.framework.modules.metric.dto.response.MetricDataResponseDTO;
 import com.framework.modules.useraccess.entity.Profile;
-import lombok.Getter;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Component
-public class WeightMetricHandler extends AbstractMetricHandler {
+public class GenericMetricHandler extends AbstractMetricHandler {
 
     public List<String> alerts;
 
     @Override
     protected MetricValidationContext validate(MetricDataDTO request, MetricType metricType) {
         MetricValidationChain chain = new MetricValidationChain(Arrays.asList(
-                new RequiredFieldValidation("weight"),
-                new RequiredFieldValidation("measurementDate"),
-                new NumericRangeValidation("weight"),
-                new NotFutureDateValidation("measurementDate")
+                new RequiredFieldValidation("value"),
+                new NumericRangeValidation("value")
         ));
 
         return chain.execute(request, metricType);
@@ -36,19 +33,16 @@ public class WeightMetricHandler extends AbstractMetricHandler {
 
     @Override
     protected List<String> analyze(MetricValidationContext context) {
-        return null;
+        return List.of();
     }
 
     @Override
     protected AbstractMetricRecord build(MetricValidationContext context, Profile profile, String source) {
-        WeightMetricRecord record = new WeightMetricRecord();
+        GenericMetricRecord record = new GenericMetricRecord();
 
-        double weight = context.getNormalized("weight", Double.class);
-        LocalDate measurementDate = context.getNormalized("measurementDate", LocalDate.class);
+        double value = context.getNormalized("value", Double.class);
 
-        record.setWeight(weight);
-        record.setMeasurementDate(measurementDate);
-
+        record.setValue(value);
         record.setMetricType(context.getMetricType());
         record.setSource(source);
         record.setProfile(profile);
@@ -57,12 +51,29 @@ public class WeightMetricHandler extends AbstractMetricHandler {
     }
 
     @Override
-    public boolean supports(String metricType) {
-        return "WEIGHT".equalsIgnoreCase(metricType);
+    public MetricDataResponseDTO toResponseDTO(AbstractMetricRecord record) {
+        GenericMetricRecord genericRecord= (GenericMetricRecord) record;
+
+        Map<String, Object> data = Map.of(
+                "value", genericRecord.getValue()
+        );
+
+        return new MetricDataResponseDTO(
+                genericRecord.getId(),
+                genericRecord.getMetricType().getType(),
+                data
+        );
     }
 
     @Override
-    public List<String> alerts() {
-        return alerts;
+    public boolean supports(String metricType) {
+        return "GENERIC_TYPE".equalsIgnoreCase(metricType);
     }
+
+    @Override
+    public String getSupportedType() {
+        return "GENERIC_TYPE";
+    }
+
+
 }
