@@ -127,7 +127,7 @@ public class PaymentService {
          User user = payment.getSubscription().getOwner();
 
          GamificationEventRequestDTO dto = GamificationEventRequestDTO.builder()
-               .eventType("login")
+               .eventType("payment-processed")
                .userId(user.getId())
                .details(Map.of("paymentSuccess", Boolean.TRUE))
                .build();

@@ -1,6 +1,4 @@
 gamification:
   enabled: true
   events:
-    - "login"
     - "check-in"
-    - "payment-processed"

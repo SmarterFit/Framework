@@ -170,7 +170,7 @@ public class TrainingGroupUserService {
             List<TrainingGroupUser> trainingGroupUsers = trainingGroupUserRepository
                         .findByUserIdAndTrainingGroupNotEnded(userId);
 
-            trainingGroupUsers.stream().map(trainingGroupUser1 -> {
+            trainingGroupUsers = trainingGroupUsers.stream().map(trainingGroupUser1 -> {
                   trainingGroupUser1.setPoints(trainingGroupUser1.getPoints() + addPoints);
                   return trainingGroupUser1;
             }).toList();

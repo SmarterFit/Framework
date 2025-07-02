@@ -2,6 +2,8 @@ package com.framework.framework.gamification.event.listener;
 
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.framework.framework.gamification.dto.request.GamificationEventRequestDTO;
 import com.framework.framework.gamification.dto.response.GamificationEventResponseDTO;
@@ -21,6 +23,7 @@ public class GamificationEventListener {
       this.trainingGroupUserService = trainingGroupUserService;
    }
 
+   @Transactional(propagation = Propagation.REQUIRES_NEW)
    @EventListener
    public void onGamificationEvent(GamificationEvent event) {
       if (gamificationRegistry.isEnabled()) {
