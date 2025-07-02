@@ -131,6 +131,17 @@ public class UserMetricService {
         userMetricRepository.delete(metricRecord);
     }
 
+    @Transactional
+    public List<MetricDataResponseDTO> getMetricHistory(UUID profileId, UUID metricTypeId) {
+        profileValidation.validateProfileByIdOrThrow(profileId);
+        MetricType metricType = metricTypeValidation.findMetricById(metricTypeId);
+        MetricHandler handler = userMetricValidation.getMetricHandler(metricType.getType());
 
+        List<AbstractMetricRecord> records = userMetricRepository
+                                                .findByProfileIdAndMetricTypeIdOrderByCreatedAtAsc(profileId, metricTypeId);
 
+        return records.stream()
+                .map(handler::toResponseDTO)
+                .toList();
+    }
 }

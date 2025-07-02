@@ -11,5 +11,7 @@ public interface UserMetricRepository extends JpaRepository<AbstractMetricRecord
 
     List<AbstractMetricRecord> findByProfileIdAndMetricTypeId(UUID profileId, UUID metricTypeId);
 
+    List<AbstractMetricRecord> findByProfileIdAndMetricTypeIdOrderByCreatedAtAsc(UUID profileId, UUID metricTypeId);
+
     Optional<AbstractMetricRecord> findById(UUID id);
 }
