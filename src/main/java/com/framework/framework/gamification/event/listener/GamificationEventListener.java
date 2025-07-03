@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.framework.framework.gamification.dto.request.GamificationEventRequestDTO;
 import com.framework.framework.gamification.dto.response.GamificationEventResponseDTO;
 import com.framework.framework.gamification.event.GamificationEvent;
-import com.framework.framework.gamification.processor.GamificationEventProcessor;
+import com.framework.framework.gamification.handler.GamificationEventHandler;
 import com.framework.framework.gamification.registry.GamificationRegistry;
 import com.framework.modules.traininggroup.service.TrainingGroupUserService;
 
@@ -28,13 +28,14 @@ public class GamificationEventListener {
    public void onGamificationEvent(GamificationEvent event) {
       if (gamificationRegistry.isEnabled()) {
          GamificationEventRequestDTO request = event.getRequest();
-         GamificationEventProcessor processor = gamificationRegistry.getProcessor(request.getEventType());
+         GamificationEventHandler handler = gamificationRegistry.getHandler(request.getEventType());
 
-         if (processor != null) {
-            GamificationEventResponseDTO response = processor.process(request);
+         if (handler != null) {
+            GamificationEventResponseDTO response = handler.handle(request);
 
             if (response.isSuccess()) {
                trainingGroupUserService.updatePoints(request.getUserId(), response.getPoints());
+               /// Enviar notificação
             }
          }
       }

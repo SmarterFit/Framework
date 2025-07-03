@@ -1,4 +1,4 @@
-package com.framework.framework.gamification.processor.impl;
+package com.framework.framework.gamification.handler.impl;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -6,10 +6,10 @@ import java.time.temporal.ChronoUnit;
 import org.springframework.stereotype.Component;
 
 import com.framework.framework.gamification.dto.request.GamificationEventRequestDTO;
-import com.framework.framework.gamification.processor.GamificationEventProcessor;
+import com.framework.framework.gamification.handler.GamificationEventHandler;
 
 @Component
-public class LoginEventProcessor extends GamificationEventProcessor {
+public class LoginEventHandler extends GamificationEventHandler {
    private static final String EVENT_TYPE = "login";
    private static final int BASE_POINTS = 1;
    private static final float BONUS_POINTS = 0.5f;

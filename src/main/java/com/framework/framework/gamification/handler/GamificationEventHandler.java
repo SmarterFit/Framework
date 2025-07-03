@@ -1,13 +1,16 @@
-package com.framework.framework.gamification.processor;
+package com.framework.framework.gamification.handler;
 
 import com.framework.framework.gamification.dto.request.GamificationEventRequestDTO;
 import com.framework.framework.gamification.dto.response.GamificationEventResponseDTO;
 
-public abstract class GamificationEventProcessor {
-   public final GamificationEventResponseDTO process(GamificationEventRequestDTO request) {
+public abstract class GamificationEventHandler {
+   protected String message;
+
+   public final GamificationEventResponseDTO handle(GamificationEventRequestDTO request) {
       if (!validate(request)) {
          return GamificationEventResponseDTO.builder()
                .success(false)
+               .message(message)
                .build();
       }
 

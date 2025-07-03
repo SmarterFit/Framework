@@ -48,7 +48,7 @@ public class ClassCheckIn {
    @JoinColumn(name = "class_session_id", nullable = false)
    private ClassSession classSession;
 
-   @Column(name = "dt_checkin_time", updatable = false)
+   @Column(name = "dt_checkin_time")
    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
    private LocalDateTime checkInTime;
 
@@ -62,7 +62,6 @@ public class ClassCheckIn {
 
    @PrePersist
    public void onPrePersist() {
-      this.checkInTime = LocalDateTime.now();
       this.updatedAt = LocalDateTime.now();
    }
 

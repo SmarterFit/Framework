@@ -42,6 +42,12 @@ public class AuthService {
       AuthResponseDTO response = AuthMapper.toResponse(accessToken, user);
       response.setUser(sensitiveDataDecryptor.decrypt(response.getUser()));
 
+      sendLoginEvents(user);
+
+      return response;
+   }
+
+   private void sendLoginEvents(User user) {
       GamificationEventRequestDTO dto = GamificationEventRequestDTO.builder()
             .eventType("login")
             .userId(user.getId())
@@ -49,7 +55,5 @@ public class AuthService {
             .build();
       GamificationEvent event = new GamificationEvent(dto);
       publisher.publishEvent(event);
-
-      return response;
    }
 }

@@ -7,7 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import com.framework.framework.gamification.config.GamificationProperties;
-import com.framework.framework.gamification.processor.GamificationEventProcessor;
+import com.framework.framework.gamification.handler.GamificationEventHandler;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,22 +17,21 @@ import lombok.Setter;
 @Setter
 public class GamificationRegistry {
    private boolean enabled;
-   private Map<String, GamificationEventProcessor> gamificationProcessors = new HashMap<>();
+   private Map<String, GamificationEventHandler> gamificationHandlers = new HashMap<>();
 
    public GamificationRegistry(GamificationProperties gamificationProperties,
-         List<GamificationEventProcessor> processors) {
+         List<GamificationEventHandler> handlers) {
       this.enabled = gamificationProperties.isEnabled();
       List<String> events = gamificationProperties.getEvents();
 
-      for (GamificationEventProcessor processor : processors) {
-         System.out.println("Processor: " + processor.getEventType());
-         if (events.contains(processor.getEventType())) {
-            gamificationProcessors.put(processor.getEventType(), processor);
+      for (GamificationEventHandler handler : handlers) {
+         if (events.contains(handler.getEventType())) {
+            gamificationHandlers.put(handler.getEventType(), handler);
          }
       }
    }
 
-   public GamificationEventProcessor getProcessor(String eventType) {
-      return gamificationProcessors.get(eventType);
+   public GamificationEventHandler getHandler(String eventType) {
+      return gamificationHandlers.get(eventType);
    }
 }

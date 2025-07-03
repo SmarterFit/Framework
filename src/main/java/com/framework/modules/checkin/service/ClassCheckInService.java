@@ -1,14 +1,18 @@
 package com.framework.modules.checkin.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
-import com.framework.modules.checkin.event.CalculatePointsUserEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.framework.common.enums.CheckInStatus;
+import com.framework.framework.gamification.dto.request.GamificationEventRequestDTO;
+import com.framework.framework.gamification.event.GamificationEvent;
 import com.framework.modules.checkin.dto.request.ClassCheckInRequestDTO;
 import com.framework.modules.checkin.dto.response.ClassCheckInResponseDTO;
 import com.framework.modules.checkin.entity.ClassCheckIn;
@@ -33,7 +37,7 @@ public class ClassCheckInService {
    private final SensitiveCheckInDataDecryptor sensitiveCheckInDataDecryptor;
    private final ApplicationEventPublisher publisher;
 
-   private static final int POINT = 1;
+   private static final int STREAK_DAYS_RANGE = 7;
 
    @Autowired
    public ClassCheckInService(ClassCheckInRepository classCheckInRepository,
@@ -61,9 +65,13 @@ public class ClassCheckInService {
       classCheckInValidation.validateClassCheckInNotExists(classCheckInId);
 
       ClassCheckIn classCheckIn = ClassCheckInMapper.toEntity(requestDTO, user, classSession);
-      classCheckIn = classCheckInRepository.save(classCheckIn);
 
-      publisher.publishEvent(new CalculatePointsUserEvent(user.getId(), POINT));
+      if (requestDTO.getStatus() == CheckInStatus.PRESENT) {
+         classCheckIn.setCheckInTime(LocalDateTime.now());
+         sendClassCheckInEvents(user);
+      }
+
+      classCheckIn = classCheckInRepository.save(classCheckIn);
 
       return sensitiveCheckInDataDecryptor.decrypt(ClassCheckInMapper.toResponse(classCheckIn));
    }
@@ -72,12 +80,17 @@ public class ClassCheckInService {
    public ClassCheckInResponseDTO updateClassCheckIn(ClassCheckInRequestDTO requestDTO) {
       ClassCheckInId classCheckInId = new ClassCheckInId(requestDTO.getUserId(), requestDTO.getClassSessionId());
       ClassCheckIn classCheckIn = classCheckInValidation.validateClassCheckInById(classCheckInId);
+      CheckInStatus currentStatus = classCheckIn.getStatus();
 
       classCheckIn = ClassCheckInMapper.toEntity(requestDTO, classCheckIn.getUser(), classCheckIn.getClassSession(),
             classCheckIn);
-      classCheckIn = classCheckInRepository.save(classCheckIn);
 
-      publisher.publishEvent(new CalculatePointsUserEvent(classCheckIn.getUser().getId(), POINT));
+      if (currentStatus != CheckInStatus.PRESENT && requestDTO.getStatus() == CheckInStatus.PRESENT) {
+         classCheckIn.setCheckInTime(LocalDateTime.now());
+         sendClassCheckInEvents(classCheckIn.getUser());
+      }
+
+      classCheckIn = classCheckInRepository.save(classCheckIn);
 
       return sensitiveCheckInDataDecryptor.decrypt(ClassCheckInMapper.toResponse(classCheckIn));
    }
@@ -96,5 +109,28 @@ public class ClassCheckInService {
       return classCheckIns.stream()
             .map(classCheckIn -> sensitiveCheckInDataDecryptor.decrypt(ClassCheckInMapper.toResponse(classCheckIn)))
             .toList();
+   }
+
+   private void sendClassCheckInEvents(User user) {
+      int streak = 0;
+
+      List<ClassCheckIn> latestCheckIns = classCheckInRepository.findLatestCheckInsByUser(user.getId(),
+            STREAK_DAYS_RANGE);
+
+      for (ClassCheckIn checkIn : latestCheckIns) {
+         if (checkIn.getStatus() == CheckInStatus.PRESENT) {
+            streak += 1;
+         } else {
+            break;
+         }
+      }
+
+      GamificationEventRequestDTO dto = GamificationEventRequestDTO.builder()
+            .eventType("check-in")
+            .userId(user.getId())
+            .details(Map.of("firstCheckInToday", true, "streak", streak))
+            .build();
+      GamificationEvent event = new GamificationEvent(dto);
+      publisher.publishEvent(event);
    }
 }
