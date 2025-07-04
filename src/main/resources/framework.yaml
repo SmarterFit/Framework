@@ -2,3 +2,15 @@ gamification:
   enabled: true
   events:
     - "check-in"
+
+payment:
+  enabled-methods:
+    - "PIX"
+    - "CREDIT_CARD"
+    - "DEBIT_CARD"
+
+import:
+    enabled-methods:
+        - "JSON"
+        - "CSV"
+
