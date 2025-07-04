@@ -18,6 +18,7 @@ import com.framework.modules.useraccess.entity.Profile;
 import com.framework.modules.useraccess.validation.ProfileValidation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -119,7 +120,6 @@ public class UserMetricService {
                 metricType,
                 profile,
                 requestDTO.getSource());
-
 
         userMetricRepository.save(result.getRecord());
         return result.getResponse();

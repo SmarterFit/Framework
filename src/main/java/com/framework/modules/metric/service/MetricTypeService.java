@@ -8,6 +8,7 @@ import com.framework.modules.metric.repository.MetricTypeRepository;
 import com.framework.modules.metric.validation.MetricTypeValidation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
 import java.util.UUID;

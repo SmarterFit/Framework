@@ -1,20 +1,18 @@
-package com.framework.framework.usermetric.handler;
+package com.framework.framework.usermetric.handler.impl;
 
 import com.framework.framework.usermetric.entity.GradeMetricRecord;
-import com.framework.framework.usermetric.entity.WeightMetricRecord;
 import com.framework.framework.usermetric.entity.generic.AbstractMetricRecord;
 import com.framework.framework.usermetric.entity.generic.MetricType;
+import com.framework.framework.usermetric.handler.AbstractMetricHandler;
 import com.framework.framework.usermetric.validation.MetricValidationContext;
 import com.framework.framework.usermetric.validation.chain.*;
 import com.framework.modules.classgroup.entity.ClassGroup;
-import com.framework.modules.classgroup.repository.ClassGroupRepository;
 import com.framework.modules.classgroup.validation.ClassGroupValidation;
 import com.framework.modules.metric.dto.request.MetricDataDTO;
 import com.framework.modules.metric.dto.response.MetricDataResponseDTO;
 import com.framework.modules.useraccess.entity.Profile;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Component
@@ -77,14 +75,15 @@ public class GradeMetricHandler extends AbstractMetricHandler {
         GradeMetricRecord gradeRecord = (GradeMetricRecord) record;
 
         Map<String, Object> data = Map.of(
-                "grade", gradeRecord.getGrade(),
+                "Nota", gradeRecord.getGrade(),
                 "classGroupId", gradeRecord.getClassGroup()
         );
 
         return new MetricDataResponseDTO(
                 gradeRecord.getId(),
                 gradeRecord.getMetricType().getType(),
-                data
+                data,
+                record.getCreatedAt()
         );
     }
 

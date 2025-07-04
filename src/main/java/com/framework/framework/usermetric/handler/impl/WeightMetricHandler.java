@@ -1,8 +1,9 @@
-package com.framework.framework.usermetric.handler;
+package com.framework.framework.usermetric.handler.impl;
 
 import com.framework.framework.usermetric.entity.WeightMetricRecord;
 import com.framework.framework.usermetric.entity.generic.AbstractMetricRecord;
 import com.framework.framework.usermetric.entity.generic.MetricType;
+import com.framework.framework.usermetric.handler.AbstractMetricHandler;
 import com.framework.framework.usermetric.validation.MetricValidationContext;
 import com.framework.framework.usermetric.validation.chain.MetricValidationChain;
 import com.framework.framework.usermetric.validation.chain.NotFutureDateValidation;
@@ -62,14 +63,15 @@ public class WeightMetricHandler extends AbstractMetricHandler {
         WeightMetricRecord weightRecord = (WeightMetricRecord) record;
 
         Map<String, Object> data = Map.of(
-                "weight", weightRecord.getWeight(),
-                "measurementDate", weightRecord.getMeasurementDate()
+                "Peso", weightRecord.getWeight(),
+                "Data", weightRecord.getMeasurementDate()
         );
 
         return new MetricDataResponseDTO(
                 weightRecord.getId(),
                 weightRecord.getMetricType().getType(),
-                data
+                data,
+                record.getCreatedAt()
         );
     }
 

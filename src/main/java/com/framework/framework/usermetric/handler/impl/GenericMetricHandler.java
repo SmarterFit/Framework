@@ -1,8 +1,9 @@
-package com.framework.framework.usermetric.handler;
+package com.framework.framework.usermetric.handler.impl;
 
 import com.framework.framework.usermetric.entity.generic.GenericMetricRecord;
 import com.framework.framework.usermetric.entity.generic.AbstractMetricRecord;
 import com.framework.framework.usermetric.entity.generic.MetricType;
+import com.framework.framework.usermetric.handler.AbstractMetricHandler;
 import com.framework.framework.usermetric.validation.MetricValidationContext;
 import com.framework.framework.usermetric.validation.chain.MetricValidationChain;
 import com.framework.framework.usermetric.validation.chain.NumericRangeValidation;
@@ -18,8 +19,6 @@ import java.util.Map;
 
 @Component
 public class GenericMetricHandler extends AbstractMetricHandler {
-
-    public List<String> alerts;
 
     @Override
     protected MetricValidationContext validate(MetricDataDTO request, MetricType metricType) {
@@ -55,13 +54,15 @@ public class GenericMetricHandler extends AbstractMetricHandler {
         GenericMetricRecord genericRecord= (GenericMetricRecord) record;
 
         Map<String, Object> data = Map.of(
-                "value", genericRecord.getValue()
+                "Valor", genericRecord.getValue()
         );
 
         return new MetricDataResponseDTO(
                 genericRecord.getId(),
                 genericRecord.getMetricType().getType(),
-                data
+                data,
+                record.getCreatedAt()
+
         );
     }
 

@@ -37,7 +37,7 @@ public class MetricTypeController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<MetricTypeResponseDTO>> getMetricTypeById() {
+    public ResponseEntity<List<MetricTypeResponseDTO>> getAllMetricType() {
         List<MetricTypeResponseDTO> list = metricTypeService.getAllMetricsType();
         return ResponseEntity.ok(list);
     }

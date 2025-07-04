@@ -30,7 +30,7 @@ public class UserMetricController {
     @PostMapping("/importar")
     public ResponseEntity<ImportResultResponseDTO> importMetrics(
             @RequestParam("file") MultipartFile file,
-            @RequestHeader("metricType") String metricType,
+            @RequestParam("metricType") String metricType,
             @RequestHeader("X-User-Id") UUID requesterId) {
 
         ImportResultResponseDTO result = userMetricService.importMetrics(file, metricType, requesterId);
