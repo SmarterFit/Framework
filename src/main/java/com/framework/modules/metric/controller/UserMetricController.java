@@ -72,6 +72,12 @@ public class UserMetricController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/listar/historico/{metricTypeId}")
+    public ResponseEntity<List<MetricDataResponseDTO>> getMetricHistory(@PathVariable UUID metricTypeId, @RequestHeader("X-User-Id") UUID requesterId){
+        List<MetricDataResponseDTO> history = userMetricService.getMetricHistory(requesterId, metricTypeId);
+        return ResponseEntity.ok(history);
+    }
+
 }
 
 
