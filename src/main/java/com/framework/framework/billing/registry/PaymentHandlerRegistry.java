@@ -1,4 +1,4 @@
-package com.framework.framework.billing;
+package com.framework.framework.billing.registry;
 
 import com.framework.common.exceptions.BusinessException;
 import com.framework.framework.billing.entity.PaymentMethod;

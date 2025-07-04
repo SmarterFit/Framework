@@ -1,4 +1,4 @@
-package com.framework.framework.billing;
+package com.framework.framework.billing.registry;
 
 import lombok.Getter;
 import lombok.Setter;
