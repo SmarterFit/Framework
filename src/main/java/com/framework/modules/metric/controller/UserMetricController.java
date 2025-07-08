@@ -1,8 +1,6 @@
 package com.framework.modules.metric.controller;
 
-
 import com.framework.framework.usermetric.entity.generic.AbstractMetricRecord;
-import com.framework.modules.metric.dto.request.ImportMetricRequestDTO;
 import com.framework.modules.metric.dto.request.MetricDataRequestDTO;
 import com.framework.modules.metric.dto.response.ImportResultResponseDTO;
 import com.framework.modules.metric.dto.response.MetricDataResponseDTO;
@@ -26,7 +24,6 @@ public class UserMetricController {
         this.userMetricService = userMetricService;
     }
 
-
     @PostMapping("/importar")
     public ResponseEntity<ImportResultResponseDTO> importMetrics(
             @RequestParam("file") MultipartFile file,
@@ -39,7 +36,7 @@ public class UserMetricController {
 
     @GetMapping("/listar/tipo/id/{metricTypeId}")
     public ResponseEntity<List<MetricDataResponseDTO>> getMetricsByProfileAndType(
-             @PathVariable("metricTypeId") UUID metricTypeId,
+            @PathVariable("metricTypeId") UUID metricTypeId,
             @RequestHeader("X-User-Id") UUID requesterId) {
 
         List<MetricDataResponseDTO> result = userMetricService.getMetricsByProfileAndType(requesterId, metricTypeId);
@@ -51,10 +48,10 @@ public class UserMetricController {
             @PathVariable("nameMetricType") String nameMetricType,
             @RequestHeader("X-User-Id") UUID requesterId) {
 
-        List<MetricDataResponseDTO> result = userMetricService.getMetricsByProfileAndTypeByName(requesterId, nameMetricType);
+        List<MetricDataResponseDTO> result = userMetricService.getMetricsByProfileAndTypeByName(requesterId,
+                nameMetricType);
         return ResponseEntity.ok(result);
     }
-
 
     @PostMapping("/adicionar")
     public ResponseEntity<MetricDataResponseDTO> addMetric(
@@ -73,11 +70,17 @@ public class UserMetricController {
     }
 
     @GetMapping("/listar/historico/{metricTypeId}")
-    public ResponseEntity<List<MetricDataResponseDTO>> getMetricHistory(@PathVariable UUID metricTypeId, @RequestHeader("X-User-Id") UUID requesterId){
+    public ResponseEntity<List<MetricDataResponseDTO>> getMetricHistory(@PathVariable UUID metricTypeId,
+            @RequestHeader("X-User-Id") UUID requesterId) {
         List<MetricDataResponseDTO> history = userMetricService.getMetricHistory(requesterId, metricTypeId);
         return ResponseEntity.ok(history);
     }
 
+    @GetMapping("/listar/ultimos")
+    public ResponseEntity<List<MetricDataResponseDTO>> getLastsMetricsByProfile(
+            @RequestHeader("X-User-Id") UUID requesterId) {
+        List<MetricDataResponseDTO> history = userMetricService.getLastsMetricsByProfile(requesterId);
+        return ResponseEntity.ok(history);
+    }
+
 }
-
-

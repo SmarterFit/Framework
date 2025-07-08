@@ -1,6 +1,5 @@
 package com.framework.modules.metric.controller;
 
-
 import com.framework.common.enums.RoleType;
 import com.framework.common.security.RequireRole;
 import com.framework.modules.metric.dto.request.MetricTypeRequestDTO;
@@ -45,7 +44,7 @@ public class MetricTypeController {
     @RequireRole(RoleType.ADMIN)
     @PutMapping("/{id}")
     public ResponseEntity<MetricTypeResponseDTO> updateMetricType(@PathVariable UUID id,
-                                                                  @RequestBody MetricTypeRequestDTO requestDTO) {
+            @RequestBody MetricTypeRequestDTO requestDTO) {
         MetricTypeResponseDTO response = metricTypeService.updateMetricType(id, requestDTO);
         return ResponseEntity.ok(response);
     }
@@ -54,6 +53,13 @@ public class MetricTypeController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> disableMetricType(@PathVariable UUID id) {
         metricTypeService.disableMetricType(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @RequireRole(RoleType.ADMIN)
+    @PatchMapping("/{id}/ativar")
+    public ResponseEntity<Void> enableMetricType(@PathVariable UUID id) {
+        metricTypeService.enableMetricType(id);
         return ResponseEntity.noContent().build();
     }
 }

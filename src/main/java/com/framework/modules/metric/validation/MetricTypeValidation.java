@@ -1,6 +1,5 @@
 package com.framework.modules.metric.validation;
 
-
 import com.framework.common.exceptions.BusinessException;
 import com.framework.framework.usermetric.entity.generic.MetricType;
 import com.framework.modules.metric.repository.MetricTypeRepository;
@@ -23,7 +22,6 @@ public class MetricTypeValidation {
                 .orElseThrow(() -> new BusinessException("MetricType not found with id: " + id));
     }
 
-
     public MetricType findMetricByType(String type) {
         return metricTypeRepository.findByType(type)
                 .orElseThrow(() -> new BusinessException("MetricType not found with type: " + type));
@@ -39,5 +37,10 @@ public class MetricTypeValidation {
         if (existing.isPresent()) {
             throw new BusinessException("MetricType with name '" + type + "' already exists.");
         }
+    }
+
+    public MetricType findEnabledMetricByType(String type) {
+        return metricTypeRepository.findByTypeAndEnabledTrue(type)
+                .orElseThrow(() -> new BusinessException("Enabled MetricType not found with type: " + type));
     }
 }

@@ -18,7 +18,6 @@ import com.framework.modules.useraccess.entity.Profile;
 import com.framework.modules.useraccess.validation.ProfileValidation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -53,7 +52,7 @@ public class UserMetricService {
     public ImportResultResponseDTO importMetrics(MultipartFile file, String type, UUID requesterId) {
 
         Profile profile = profileValidation.validateProfileById(requesterId);
-        MetricType metricType = metricTypeValidation.findMetricByType(type);
+        MetricType metricType = metricTypeValidation.findEnabledMetricByType(type);
 
         String sourceType = fileTypeValidator.validateAndGetImportMethod(file);
 
@@ -109,11 +108,21 @@ public class UserMetricService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<MetricDataResponseDTO> getLastsMetricsByProfile(UUID profileId) {
+        profileValidation.validateProfileByIdOrThrow(profileId);
+        List<AbstractMetricRecord> list = userMetricRepository.findLastsByProfileId(profileId);
+        return list.stream().map(record -> {
+            MetricHandler handler = userMetricValidation.getMetricHandler(record.getMetricType().getType());
+            return handler.toResponseDTO(record);
+        }).toList();
+    }
+
     @Transactional
     public MetricDataResponseDTO addMetric(UUID userId, MetricDataRequestDTO requestDTO) {
         Profile profile = profileValidation.validateProfileById(userId);
 
-        MetricType metricType = metricTypeValidation.findMetricByType(requestDTO.getMetricType());
+        MetricType metricType = metricTypeValidation.findEnabledMetricByType(requestDTO.getMetricType());
         MetricHandler handler = userMetricValidation.getMetricHandler(requestDTO.getMetricType());
 
         MetricProcessResult result = handler.handle(new MetricDataDTO(requestDTO.getData()),
@@ -121,8 +130,8 @@ public class UserMetricService {
                 profile,
                 requestDTO.getSource());
 
-        userMetricRepository.save(result.getRecord());
-        return result.getResponse();
+        AbstractMetricRecord record = userMetricRepository.save(result.getRecord());
+        return handler.toResponseDTO(record);
     }
 
     @Transactional

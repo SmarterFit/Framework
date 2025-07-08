@@ -8,7 +8,6 @@ import com.framework.modules.metric.repository.MetricTypeRepository;
 import com.framework.modules.metric.validation.MetricTypeValidation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,7 +19,7 @@ public class MetricTypeService {
     private final MetricTypeValidation metricTypeValidation;
 
     public MetricTypeService(MetricTypeRepository metricTypeRepository,
-                             MetricTypeValidation metricTypeValidation) {
+            MetricTypeValidation metricTypeValidation) {
         this.metricTypeRepository = metricTypeRepository;
         this.metricTypeValidation = metricTypeValidation;
     }
@@ -41,12 +40,11 @@ public class MetricTypeService {
         return MetricTypeMapper.toResponse(metricType);
     }
 
-
     @Transactional(readOnly = true)
     public List<MetricTypeResponseDTO> getAllMetricsType() {
         List<MetricType> metricTypes = metricTypeRepository.findAll();
 
-        return  metricTypes.stream().map(MetricTypeMapper::toResponse).toList();
+        return metricTypes.stream().map(MetricTypeMapper::toResponse).toList();
     }
 
     @Transactional
@@ -63,6 +61,13 @@ public class MetricTypeService {
     public void disableMetricType(UUID id) {
         MetricType metricType = metricTypeValidation.validateMetricTypeById(id);
         metricType.setEnabled(false);
+        metricTypeRepository.save(metricType);
+    }
+
+    @Transactional
+    public void enableMetricType(UUID id) {
+        MetricType metricType = metricTypeValidation.validateMetricTypeById(id);
+        metricType.setEnabled(true);
         metricTypeRepository.save(metricType);
     }
 }
