@@ -1,0 +1,39 @@
+package com.framework.modules.challenge.entity;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ChallengeTrail {
+
+    @Id
+    @GeneratedValue
+    private UUID id;
+
+    @OneToOne
+    @JoinColumn(name = "challenge_quest_id", nullable = false)
+    private ChallengeQuest challengeQuest;
+
+    @OneToMany(mappedBy = "trail", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChallengeDay> days = new ArrayList<>();
+
+    @Column(name = "dt_created_at", nullable = false, updatable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
+}
