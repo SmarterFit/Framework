@@ -28,12 +28,14 @@ public class ChallengeQuestMapper {
 
     public static ChallengeQuestResponseDTO toResponse(ChallengeQuest challengeQuest) {
         return ChallengeQuestResponseDTO.builder()
+                .id(challengeQuest.getId())
                 .metricType(challengeQuest.getMetricType())
                 .title(challengeQuest.getTitle())
                 .daysOfWeek(challengeQuest.getDaysOfWeek())
                 .description(challengeQuest.getDescription())
                 .startDate(challengeQuest.getStartDate())
                 .endDate(challengeQuest.getEndDate())
+                .challengeType(challengeQuest.getChallengeType())
                 .build();
     }
 

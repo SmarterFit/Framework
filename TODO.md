@@ -4,16 +4,16 @@
 
 ### 1. ✅ **Modelagem de Entidades**
 
-* [ ] Criar entidade `PersonalQuest` com:
+* [X] Criar entidade `ChallengeQuest` com:
 
-  * `id`, `userId`, `name`, `domain`, `description`, `weeklyFrequency`, `startDate?`, `endDate?`, `metricType`, `completed`
-* [ ] Criar entidade `ChallengeTrail`:
+  * `id`, `userId`, `name`, `domain`, `description`, `daysOfWeek`, `startDate?`, `endDate?`, `metricType`, `completed`
+* [X] Criar entidade `ChallengeTrail`:
 
   * `id`, `quest`, `days: List<ChallengeDay>`
-* [ ] Criar entidade `ChallengeDay`:
+* [X] Criar entidade `ChallengeDay`:
 
   * `date`, `steps: List<ChallengeStep>`
-* [ ] Criar entidade `ChallengeStep`:
+* [X] Criar entidade `ChallengeStep`:
 
   * `description`, `completed`
 
@@ -21,11 +21,11 @@
 
 ### 2. 🛠️ **CRUDs e Endpoints**
 
-#### 🔹 PersonalQuest
+#### 🔹 ChallengeQuest
 
-* [ ] Criar nova `quest`
-* [ ] Editar `quest` (nome, descrição, domínio, frequência, datas, completude)
-* [ ] Excluir `quest`
+* [X] Criar nova `quest`
+* [X] Editar `quest` (nome, descrição, frequência, datas, completude)
+* [X] Excluir `quest`
 * [ ] Listar todas as `quests` do usuário
 * [ ] Ver detalhes de uma `quest`, incluindo sua `ChallengeTrail`
 
@@ -33,30 +33,30 @@
 
 * [ ] Gerar trail automaticamente (IA)
 * [ ] Atualizar dias da semana e frequência
-* [ ] Regerar trail se `weeklyFrequency`, `startDate` ou `endDate` mudar
-* [ ] Permitir edição manual da trail pelo usuário
+* [ ] Regerar trail se `daysOfWeek`, `startDate` ou `endDate` mudar
+* [X] Permitir edição manual da trail pelo usuário
 
 #### 🔹 ChallengeDay
 
-* [ ] Visualizar lista de dias com tarefas
-* [ ] Adicionar ou excluir dias específicos (exceções)
-* [ ] Editar data de um dia
+* [X] Visualizar lista de dias com tarefas
+* [X] Adicionar ou excluir dias específicos (exceções)
+* [X] Editar data de um dia
 
 #### 🔹 ChallengeStep
 
-* [ ] Criar passo manualmente
-* [ ] Editar passo (descrição)
+* [X] Criar passo manualmente
+* [X] Editar passo (descrição)
 * [ ] Marcar passo como concluído ou não
-* [ ] Excluir passo
+* [X] Excluir passo
 * [ ] Mover passo entre dias
 
 ---
 
 ### 3. 🤖 **Lógica de IA e Regras de Geração**
 
-* [ ] Dado um `PersonalQuest`, gerar a `ChallengeTrail` com base em:
+* [ ] Dado um `ChallengeQuest`, gerar a `ChallengeTrail` com base em:
 
-  * `startDate`, `endDate`, `weeklyFrequency`, `metricType`
+  * `startDate`, `endDate`, `daysOfWeek`, `metricType`
 * [ ] Calcular número total de semanas
 * [ ] Gerar os dias (`ChallengeDay`) da primeira semana, e seus `steps` com base no domínio + métrica
 * [ ] Reutilizar estrutura de `ChallengeStep` nas demais semanas
@@ -80,7 +80,7 @@
 
 ### 6. 🖥️ **Interface (caso frontend)**
 
-* [ ] Tela para criação de PersonalQuest
+* [ ] Tela para criação de ChallengeQuest
 * [ ] Calendário semanal com ChallengeDays
 * [ ] Checklists para cada ChallengeDay
 * [ ] Histórico de progresso
@@ -90,7 +90,7 @@
 
 ## 📌 Sugestão de ordem de implementação
 
-1. CRUD básico de `PersonalQuest`
+1. CRUD básico de `ChallengeQuest`
 2. Serviço de geração de `ChallengeTrail`
 3. Lógica de repetição automática de `ChallengeDay`
 4. CRUD de `ChallengeDay` e `ChallengeStep`

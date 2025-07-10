@@ -6,6 +6,7 @@ import lombok.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -14,9 +15,13 @@ import java.util.List;
 @Builder(toBuilder = true)
 public class ChallengeQuestResponseDTO {
 
+    private UUID id;
+
     private MetricType metricType;
 
     private String title;
+
+    private String challengeType;
 
     private List<DayOfWeek> daysOfWeek;
 

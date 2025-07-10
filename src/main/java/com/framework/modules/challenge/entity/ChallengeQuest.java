@@ -30,6 +30,8 @@ public class ChallengeQuest {
 
     private String title;
 
+    private String challengeType;
+
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
 

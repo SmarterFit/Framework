@@ -26,6 +26,10 @@ public class ChallengeQuestRequestDTO {
     @Size(max = 100, message = "Title must have at most 100 characters")
     private String title;
 
+    @NotBlank(message = "Challenge type is required")
+    @Size(max = 50, message = "Challenge type must have at most 50 characters")
+    private String challengeType;
+
     @NotNull(message = "Days of week are required")
     @Size(min = 1, message = "At least one day of the week must be selected")
     private List<DayOfWeek> daysOfWeek;

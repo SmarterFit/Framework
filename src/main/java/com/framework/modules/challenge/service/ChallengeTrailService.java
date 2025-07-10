@@ -62,4 +62,11 @@ public class ChallengeTrailService {
                 .orElseThrow(() -> new RuntimeException("ChallengeTrail not found"));
         return ChallengeTrailMapper.toResponseDTO(entity);
     }
+
+    public ChallengeTrailResponseDTO create(ChallengeTrail trail) {
+        ChallengeTrail savedTrail =  repository.save(trail);
+
+        return ChallengeTrailMapper.toResponseDTO(savedTrail);
+    }
+
 }

@@ -140,6 +140,10 @@ public class UserMetricService {
         userMetricRepository.delete(metricRecord);
     }
 
+    public AbstractMetricRecord getLastMetric(UUID userId, UUID metricTypeId) {
+        return userMetricRepository.findLastByProfileIdAndMetricTypeIdOrderByCreatedAtDesc(userId, metricTypeId);
+    }
+
     @Transactional
     public List<MetricDataResponseDTO> getMetricHistory(UUID profileId, UUID metricTypeId) {
         profileValidation.validateProfileByIdOrThrow(profileId);

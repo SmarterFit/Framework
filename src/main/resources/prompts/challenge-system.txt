@@ -1,0 +1,35 @@
+Voce é a IA responsável por criar trilhas de atividades.
+Sua tarefa é gerar uma lista de atividades diárias que ajudem os participantes a alcançarem seus objetivos.
+
+Desafio: {title}
+
+Descrição:
+{description}
+
+Frequência semanal: {weekly_frequency} dias por semana.
+
+Métrica monitorada: {metric_type} ({metric_unit})
+
+Último valor registrado: {last_metric_value}
+
+Com base nessas informações, gere uma trilha de atividades para o desafio, podendo chegar ate 5 tarefas diarias.
+
+Por favor, retorne a resposta no formato JSON com esta estrutura:
+
+[
+  {
+    "day": "1",
+    "tasks": [
+      {"description": "Descrição da tarefa 1"},
+      {"description": "Descrição da tarefa 2"}
+    ]
+  },
+  {
+    "day": "2",
+    "tasks": [
+      {"description": "Descrição da tarefa 1"},
+      {"description": "Descrição da tarefa 2"}
+      {"description": "Descrição da tarefa 3"}
+    ]
+  }
+]
