@@ -21,6 +21,7 @@ public class ChallengeQuestMapper {
         challengeQuest = GenericMapper.map(dto, challengeQuest);
         challengeQuest.setMetricType(metricType);
         challengeQuest.setProfile(profile);
+        challengeQuest.setExperienceLevel(dto.getExperienceLevel());
 
         return challengeQuest;
     }
@@ -31,6 +32,7 @@ public class ChallengeQuestMapper {
                 .id(challengeQuest.getId())
                 .metricType(challengeQuest.getMetricType())
                 .title(challengeQuest.getTitle())
+                .experienceLevel(challengeQuest.getExperienceLevel())
                 .daysOfWeek(challengeQuest.getDaysOfWeek())
                 .description(challengeQuest.getDescription())
                 .startDate(challengeQuest.getStartDate())

@@ -9,6 +9,7 @@ import com.framework.modules.challenge.entity.ChallengeQuest;
 import com.framework.modules.challenge.entity.ChallengeTrail;
 import com.framework.modules.challenge.service.ChallengeTrailService;
 import com.framework.modules.challenge.validation.ChallengeQuestValidation;
+import com.framework.modules.challenge.validation.ChallengeTrailValidation;
 import com.framework.modules.useraccess.entity.Profile;
 import com.framework.modules.useraccess.validation.ProfileValidation;
 import org.springframework.stereotype.Service;
@@ -21,16 +22,19 @@ public class ChallengeService {
 
 
     private final ChallengeTrailService challengeTrailService;
+    private final ChallengeTrailValidation challengeTrailValidation;
     private final ChallengeQuestValidation challengeQuestValidation;
     private final ChallengeHandleValidation challengeHandleValidation;
     private final ProfileValidation profileValidation;
 
     public ChallengeService(ChallengeTrailService challengeTrailService,
+                            ChallengeTrailValidation challengeTrailValidation,
                             ChallengeQuestValidation challengeQuestValidation,
                             ChallengeHandleValidation challengeHandleValidation,
                             ProfileValidation profileValidation) {
 
         this.challengeTrailService = challengeTrailService;
+        this.challengeTrailValidation = challengeTrailValidation;
         this.challengeQuestValidation = challengeQuestValidation;
         this.challengeHandleValidation = challengeHandleValidation;
         this.profileValidation = profileValidation;
@@ -43,7 +47,11 @@ public class ChallengeService {
 
         ChallengeTrail trail = handler.processChallengeQuest(challengeQuest, profile.getId());
         trail.setChallengeQuest(challengeQuest);
-        return  challengeTrailService.create(trail);
+
+        if(challengeTrailValidation.existsTrailByQuestId(challengeQuestId)){
+            challengeTrailService.deleteChallengeTrailByQuestId(challengeQuestId);
+        }
+        return challengeTrailService.create(trail);
     }
 
 }

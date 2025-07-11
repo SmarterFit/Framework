@@ -27,4 +27,12 @@ public class ChallengeTrailValidation {
         }
     }
 
+    public boolean existsTrailByQuestId(UUID challengeQuestId) {
+        return challengeTrailRepository.existsByChallengeQuestId(challengeQuestId);
+    }
+
+    public ChallengeTrail findByChallengeQuestId(UUID challengeQuestId) {
+        return challengeTrailRepository.findByChallengeQuestId(challengeQuestId)
+                .orElseThrow(() -> new ResourceNotFoundException("Challenge trail not found for quest ID: " + challengeQuestId));
+    }
 }

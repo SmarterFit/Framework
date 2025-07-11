@@ -1,6 +1,7 @@
 package com.framework.modules.challenge.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.framework.common.enums.ExperienceLevel;
 import com.framework.framework.usermetric.entity.generic.MetricType;
 import com.framework.modules.useraccess.entity.Profile;
 import jakarta.persistence.*;
@@ -31,6 +32,11 @@ public class ChallengeQuest {
     private String title;
 
     private String challengeType;
+
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    @Column(name = "experience_level", nullable = false)
+    private ExperienceLevel experienceLevel = ExperienceLevel.BEGINNER;
 
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;

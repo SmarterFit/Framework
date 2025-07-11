@@ -19,7 +19,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class WeightMetricRecord extends AbstractMetricRecord {
 
-    private double weight;
+    private Double weight;
 
     private LocalDate measurementDate;
 

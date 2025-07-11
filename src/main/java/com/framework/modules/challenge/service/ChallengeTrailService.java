@@ -63,6 +63,12 @@ public class ChallengeTrailService {
         return ChallengeTrailMapper.toResponseDTO(entity);
     }
 
+    public void deleteChallengeTrailByQuestId(UUID questId) {
+        challengeQuestValidation.validateChallengeQuestById(questId);
+        ChallengeTrail trail = challengeTrailValidation.findByChallengeQuestId(questId);
+        repository.delete(trail);
+    }
+
     public ChallengeTrailResponseDTO create(ChallengeTrail trail) {
         ChallengeTrail savedTrail =  repository.save(trail);
 

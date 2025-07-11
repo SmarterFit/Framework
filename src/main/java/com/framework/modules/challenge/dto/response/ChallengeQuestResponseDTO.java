@@ -1,5 +1,6 @@
 package com.framework.modules.challenge.dto.response;
 
+import com.framework.common.enums.ExperienceLevel;
 import com.framework.framework.usermetric.entity.generic.MetricType;
 import lombok.*;
 
@@ -22,6 +23,8 @@ public class ChallengeQuestResponseDTO {
     private String title;
 
     private String challengeType;
+
+    private ExperienceLevel experienceLevel;
 
     private List<DayOfWeek> daysOfWeek;
 
