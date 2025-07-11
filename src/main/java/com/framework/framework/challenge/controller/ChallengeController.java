@@ -1,11 +1,12 @@
 package com.framework.framework.challenge.controller;
 
+import com.framework.framework.challenge.dto.request.ChallengeGenericMetricRequestDTO;
 import com.framework.framework.challenge.service.ChallengeService;
 import com.framework.modules.challenge.dto.response.ChallengeTrailResponseDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -21,12 +22,12 @@ public class ChallengeController {
     }
 
 
-    @PostMapping("/{challengeQuestId}")
+    @PostMapping
     public ResponseEntity<ChallengeTrailResponseDTO> generateChallenge(
-            @PathVariable("challengeQuestId") UUID challengeQuestId,
+            @RequestBody @Valid ChallengeGenericMetricRequestDTO challengeGenericQuestRequest,
             @RequestHeader("X-User-Id") UUID requesterId) throws IOException {
 
-        ChallengeTrailResponseDTO response = challengeService.generateChallenge(requesterId, challengeQuestId);
+        ChallengeTrailResponseDTO response = challengeService.generateChallenge(requesterId, challengeGenericQuestRequest);
         return ResponseEntity.status(201).body(response);
     }
 

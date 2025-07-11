@@ -6,27 +6,20 @@ import com.framework.common.exceptions.ChallengeProcessingException;
 import com.framework.framework.challenge.dto.ChallengeAiDTO;
 import com.framework.framework.challenge.utils.ChallengeDayCalculator;
 import com.framework.framework.challenge.utils.ChallengePromptLoader;
-import com.framework.framework.usermetric.entity.generic.AbstractMetricRecord;
 import com.framework.framework.usermetric.entity.generic.MetricType;
 import com.framework.modules.challenge.entity.ChallengeDay;
 import com.framework.modules.challenge.entity.ChallengeQuest;
 import com.framework.modules.challenge.entity.ChallengeStep;
 import com.framework.modules.challenge.entity.ChallengeTrail;
+import com.framework.modules.metric.dto.request.MetricDataDTO;
 import com.framework.modules.metric.service.UserMetricService;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -43,19 +36,26 @@ public abstract class ChallengeHandler {
         this.userMetricService = userMetricService;
     }
 
-    public final ChallengeTrail processChallengeQuest(ChallengeQuest quest, UUID userId) throws IOException {
-        AbstractMetricRecord metric = fetchUserMetric(quest.getMetricType(), userId);
-        List<LocalDate> maxChallengeDays = challengeDayCalculator.calculateChallengeDays(
-                quest.getStartDate(), quest.getEndDate(), quest.getDaysOfWeek().size());
+    protected abstract String fetchUserMetric(MetricType metricType, UUID userId, MetricDataDTO metricDataDTO);
 
-        String prompt = buildPrompt(quest, metric, maxChallengeDays.size());
+    public abstract String getChallengeType();
+
+
+
+
+    public final ChallengeTrail processChallengeQuest(ChallengeQuest quest, UUID userId,
+                                                      MetricDataDTO metricDataDTO)  throws IOException {
+
+        String lastMetric = fetchUserMetric(quest.getMetricType(), userId, metricDataDTO);
+        List<LocalDate> maxChallengeDays = challengeDayCalculator.calculateChallengeDays(
+                quest.getStartDate(), quest.getEndDate(), quest.getDaysOfWeek());
+
+        String prompt = buildPrompt(quest, lastMetric, maxChallengeDays.size());
         List<ChallengeAiDTO> challengeAiDTOS = getResponseAi(prompt);
         return generateTrail(quest, challengeAiDTOS, maxChallengeDays);
     }
 
-    protected abstract AbstractMetricRecord fetchUserMetric(MetricType metricType, UUID userId);
-
-    protected String buildPrompt(ChallengeQuest quest, AbstractMetricRecord lastMetric, int maxChallengeDays) throws IOException {
+    private String buildPrompt(ChallengeQuest quest, String lastMetric, int maxChallengeDays) throws IOException {
         String prompt = promptLoader.loadPrompt(quest.getExperienceLevel());
 
         return prompt
@@ -64,7 +64,7 @@ public abstract class ChallengeHandler {
                 .replace("{weekly_frequency}", String.valueOf(maxChallengeDays))
                 .replace("{metric_type}", quest.getMetricType().getType())
                 .replace("{metric_unit}", quest.getMetricType().getUnit())
-                .replace("{last_metric_value}", extractMetricValue(lastMetric));
+                .replace("{last_metric_value}", lastMetric);
     }
 
     private List<ChallengeAiDTO> getResponseAi(String prompt) {
@@ -74,8 +74,6 @@ public abstract class ChallengeHandler {
                     .call()
                     .content();
 
-            Path outputPath = Paths.get("ai-response.json");
-            Files.writeString(outputPath, aiResponse);
 
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(aiResponse, new TypeReference<List<ChallengeAiDTO>>() {});
@@ -122,7 +120,4 @@ public abstract class ChallengeHandler {
         }).collect(Collectors.toList());
     }
 
-    protected abstract String extractMetricValue(AbstractMetricRecord lastMetric);
-
-    public abstract String getChallengeType();
 }

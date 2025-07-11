@@ -1,6 +1,6 @@
 package com.framework.framework.usermetric.handler.impl;
 
-import com.framework.framework.usermetric.entity.GradeMetricRecord;
+import com.framework.framework.usermetric.entity.grade.ClassGradeMetricRecord;
 import com.framework.framework.usermetric.entity.generic.AbstractMetricRecord;
 import com.framework.framework.usermetric.entity.generic.MetricType;
 import com.framework.framework.usermetric.handler.AbstractMetricHandler;
@@ -53,12 +53,10 @@ public class GradeMetricHandler extends AbstractMetricHandler {
 
     @Override
     protected AbstractMetricRecord build(MetricValidationContext context, Profile profile, String source) {
-        GradeMetricRecord record = new GradeMetricRecord();
+        ClassGradeMetricRecord record = new ClassGradeMetricRecord();
 
         double grade = context.getNormalized("grade", Double.class);
-        UUID classGroupId = context.getNormalized("classGroupId", UUID.class);
-
-        ClassGroup classGroup = classGroupValidation.validateClassGroupById(classGroupId);
+        ClassGroup classGroup = context.getNormalized("classGroup", ClassGroup.class);
 
         record.setGrade(grade);
         record.setClassGroup(classGroup);
@@ -72,11 +70,12 @@ public class GradeMetricHandler extends AbstractMetricHandler {
 
     @Override
     public MetricDataResponseDTO toResponseDTO(AbstractMetricRecord record) {
-        GradeMetricRecord gradeRecord = (GradeMetricRecord) record;
+        ClassGradeMetricRecord gradeRecord = (ClassGradeMetricRecord) record;
 
         Map<String, Object> data = Map.of(
                 "Nota", gradeRecord.getGrade(),
-                "classGroupId", gradeRecord.getClassGroup()
+                "Turma", gradeRecord.getClassGroup().getTitle(),
+                "classGroupId", gradeRecord.getClassGroup().getId()
         );
 
         return new MetricDataResponseDTO(
@@ -95,7 +94,7 @@ public class GradeMetricHandler extends AbstractMetricHandler {
 
     @Override
     public String getSupportedType() {
-        return "GRADE";
+        return "Nota";
     }
 
 

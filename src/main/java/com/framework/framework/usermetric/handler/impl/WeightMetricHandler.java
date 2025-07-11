@@ -82,7 +82,7 @@ public class WeightMetricHandler extends AbstractMetricHandler {
 
     @Override
     public String getSupportedType() {
-        return "WEIGHT";
+        return "Peso";
     }
 
 

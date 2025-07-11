@@ -4,11 +4,13 @@ import com.framework.framework.challenge.handle.ChallengeHandler;
 import com.framework.framework.usermetric.entity.WeightMetricRecord;
 import com.framework.framework.usermetric.entity.generic.AbstractMetricRecord;
 import com.framework.framework.usermetric.entity.generic.MetricType;
+import com.framework.modules.metric.dto.request.MetricDataDTO;
 import com.framework.modules.metric.service.UserMetricService;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,12 +25,9 @@ public class WeightChallengeTrailHandler extends ChallengeHandler {
     }
 
     @Override
-    protected AbstractMetricRecord fetchUserMetric(MetricType metricType, UUID userId) {
-        return userMetricService.getLastMetric(userId, metricType.getId());
-    }
+    protected String fetchUserMetric(MetricType metricType, UUID userId, MetricDataDTO metricDataDTO) {
+        AbstractMetricRecord lastMetric =  userMetricService.getLastMetric(userId, metricType.getId()).orElse(null);
 
-    @Override
-    protected String extractMetricValue(AbstractMetricRecord lastMetric) {
         return Optional.ofNullable(lastMetric)
                 .filter(metric -> metric instanceof WeightMetricRecord)
                 .map(metric -> (WeightMetricRecord) metric)

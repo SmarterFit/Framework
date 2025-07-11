@@ -1,9 +1,9 @@
 package com.framework.framework.challenge.service;
 
 
+import com.framework.framework.challenge.dto.request.ChallengeGenericMetricRequestDTO;
 import com.framework.framework.challenge.handle.ChallengeHandler;
 import com.framework.framework.challenge.validation.ChallengeHandleValidation;
-import com.framework.modules.ai.tools.user.ProfileMetricTools;
 import com.framework.modules.challenge.dto.response.ChallengeTrailResponseDTO;
 import com.framework.modules.challenge.entity.ChallengeQuest;
 import com.framework.modules.challenge.entity.ChallengeTrail;
@@ -40,16 +40,18 @@ public class ChallengeService {
         this.profileValidation = profileValidation;
     }
 
-    public ChallengeTrailResponseDTO generateChallenge(UUID requesterId, UUID challengeQuestId) throws IOException {
-        ChallengeQuest challengeQuest = challengeQuestValidation.validateChallengeQuestById(challengeQuestId);
+    public ChallengeTrailResponseDTO generateChallenge(UUID requesterId,
+                                                       ChallengeGenericMetricRequestDTO genericMetricRequest) throws IOException {
+
+        ChallengeQuest challengeQuest = challengeQuestValidation.validateChallengeQuestById(genericMetricRequest.getChallengeQuestId());
         ChallengeHandler handler = challengeHandleValidation.getHandler(challengeQuest.getChallengeType());
         Profile profile = profileValidation.validateProfileById(requesterId);
 
-        ChallengeTrail trail = handler.processChallengeQuest(challengeQuest, profile.getId());
+        ChallengeTrail trail = handler.processChallengeQuest(challengeQuest, profile.getId(), genericMetricRequest.getMetricDataDTO());
         trail.setChallengeQuest(challengeQuest);
 
-        if(challengeTrailValidation.existsTrailByQuestId(challengeQuestId)){
-            challengeTrailService.deleteChallengeTrailByQuestId(challengeQuestId);
+        if(challengeTrailValidation.existsTrailByQuestId(genericMetricRequest.getChallengeQuestId())){
+            challengeTrailService.deleteChallengeTrailByQuestId(genericMetricRequest.getChallengeQuestId());
         }
         return challengeTrailService.create(trail);
     }

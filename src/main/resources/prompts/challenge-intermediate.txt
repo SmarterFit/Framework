@@ -27,7 +27,7 @@ algum conhecimento/habilidade prévia, então é possível incluir tarefas com i
 ### Regras obrigatórias para a geração da resposta:
 
 1. Crie **exatamente {weekly_frequency} dias por semana**.
-2. Cada "dia" deve conter entre **4 a 6 tarefas**, sempre com descrições claras, objetivas e motivadoras.
+2. Cada "dia" deve conter entre **4 e 6 tarefas**, sempre com descrições claras, objetivas e motivadoras.
 3. **Todos os dias devem conter tarefas.** Nenhum dia pode estar vazio.
 4. A resposta deve ser **exclusivamente no formato JSON**, sem explicações adicionais, comentários ou qualquer texto fora da estrutura.
 5. A estrutura da resposta deve seguir este exemplo:

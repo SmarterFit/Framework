@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -140,7 +141,7 @@ public class UserMetricService {
         userMetricRepository.delete(metricRecord);
     }
 
-    public AbstractMetricRecord getLastMetric(UUID userId, UUID metricTypeId) {
+    public Optional<AbstractMetricRecord> getLastMetric(UUID userId, UUID metricTypeId) {
         return userMetricRepository.findLastByProfileIdAndMetricTypeIdOrderByCreatedAtDesc(userId, metricTypeId);
     }
 

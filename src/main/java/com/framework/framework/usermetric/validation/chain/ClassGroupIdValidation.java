@@ -33,6 +33,7 @@ public class ClassGroupIdValidation implements MetricValidationStep {
         }
 
         ClassGroup classGroup = validation.validateClassGroupById(id);
-        context.putNormalized(fieldName, classGroup);
+        context.putNormalized("classGroup", classGroup);
+        context.putNormalized(fieldName, id);
     }
 }

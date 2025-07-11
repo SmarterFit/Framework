@@ -26,7 +26,7 @@ As atividades devem refletir a experiência do participante, oferecendo tarefas 
 ### Regras obrigatórias para a geração da resposta:
 
 1. Crie **exatamente {weekly_frequency} dias por semana**.
-2. Cada "dia" deve conter entre **4 a 6 tarefas**, sempre com descrições detalhadas, motivadoras e voltadas para vocabulo  técnico.
+2. Cada "dia" deve conter entre **4 e 6 tarefas**, sempre com descrições detalhadas, motivadoras e voltadas para vocabulo  técnico.
 3. **Todos os dias devem conter tarefas.** Nenhum dia pode estar vazio.
 4. A resposta deve ser **exclusivamente no formato JSON**, sem comentários, explicações ou qualquer conteúdo fora da estrutura.
 5. A estrutura da resposta deve seguir exatamente este modelo:
