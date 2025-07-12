@@ -37,8 +37,8 @@ public class MetricType {
     @Column(name = "max_threshold")
     private double maxThreshold;
 
-
     @OneToMany(mappedBy = "metricType", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Builder.Default
     private Set<AbstractMetricRecord> MetricRecord = new HashSet<AbstractMetricRecord>();
 
     @Column(name = "dt_created_at", nullable = false, updatable = false)
@@ -46,6 +46,8 @@ public class MetricType {
     private LocalDateTime createdAt;
 
     @PrePersist
-    public void onPrePersist() {this.createdAt = LocalDateTime.now();}
+    public void onPrePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
 
 }
