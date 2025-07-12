@@ -19,8 +19,6 @@ public class MetricHandlerRegistry {
 
     private static final String GENERIC_METRIC_TYPE = "GENERIC_TYPE";
 
-
-
     public MetricHandlerRegistry(List<MetricHandler> handlers, MetricTypeInitializer metricTypeInitializer) {
         this.handlers = handlers;
         this.metricTypeInitializer = metricTypeInitializer;
@@ -51,9 +49,9 @@ public class MetricHandlerRegistry {
 
     public Optional<MetricHandler> getHandler(String metricType) {
         if (isSystemMetric(metricType)) {
-            return Optional.ofNullable(systemHandlerMap.get(metricType));
-        } else {
             return Optional.of(genericMetricHandler);
+        } else {
+            return Optional.ofNullable(systemHandlerMap.get(metricType));
         }
     }
 }
