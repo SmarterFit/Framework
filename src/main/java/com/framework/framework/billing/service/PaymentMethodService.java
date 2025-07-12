@@ -35,11 +35,12 @@ public class PaymentMethodService {
    @Transactional
    private void init() {
       for (Entry<String, PaymentHandler> entry : paymentHandlerRegistry.getActiveHandlers().entrySet()) {
-         String methodName = entry.getKey();
+         String methodId = entry.getKey();
          PaymentHandler handler = entry.getValue();
 
-         PaymentMethod type = paymentMethodRepository.findByName(methodName).orElseGet(PaymentMethod::new);
-         type.setName(methodName);
+         PaymentMethod type = paymentMethodRepository.findById(methodId).orElseGet(PaymentMethod::new);
+         type.setId(methodId);
+         type.setName(handler.getPaymentMethodName());
          type.setEnabled(true);
          type.setHandlerClass(handler.getClass().getName());
          paymentMethodRepository.save(type);
@@ -57,11 +58,11 @@ public class PaymentMethodService {
    }
 
    @Transactional
-   public PaymentMethodResponseDTO enablePaymentMethod(String methodName) {
-      PaymentMethod paymentMethod = paymentMethodValidation.validatePaymentMethodName(methodName);
+   public PaymentMethodResponseDTO enablePaymentMethod(String methodId) {
+      PaymentMethod paymentMethod = paymentMethodValidation.validatePaymentMethodId(methodId);
       PaymentHandler handler = paymentMethodValidation.validateHandlerIsAvailable(paymentMethod.getName());
 
-      paymentHandlerRegistry.enableHandler(methodName, handler);
+      paymentHandlerRegistry.enableHandler(methodId, handler);
 
       paymentMethod.setEnabled(true);
       paymentMethod = paymentMethodRepository.save(paymentMethod);
@@ -71,7 +72,7 @@ public class PaymentMethodService {
 
    @Transactional
    public PaymentMethodResponseDTO disablePaymentMethod(String methodName) {
-      PaymentMethod paymentMethod = paymentMethodValidation.validatePaymentMethodName(methodName);
+      PaymentMethod paymentMethod = paymentMethodValidation.validatePaymentMethodId(methodName);
       paymentHandlerRegistry.disableHandler(methodName);
 
       paymentMethod.setEnabled(false);

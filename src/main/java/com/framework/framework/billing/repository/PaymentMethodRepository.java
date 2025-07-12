@@ -9,17 +9,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface PaymentMethodRepository extends JpaRepository<PaymentMethod, UUID> {
-
+public interface PaymentMethodRepository extends JpaRepository<PaymentMethod, String> {
+    Optional<PaymentMethod> findByIdAndEnabledTrue(String id);
+    
     Optional<PaymentMethod> findByName(String name);
 
     List<PaymentMethod> findAllByEnabledTrue();
 
     @Modifying
     @Transactional
-    @Query("UPDATE PaymentMethod m SET m.enabled = false WHERE m.name NOT IN :activeNames")
-    void deactivateMethodsNotIn(List<String> activeNames);
+    @Query("UPDATE PaymentMethod m SET m.enabled = false WHERE m.id NOT IN :activeIds")
+    void deactivateMethodsNotIn(List<String> activeIds);
 }

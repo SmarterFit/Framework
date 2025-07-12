@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.framework.common.enums.PaymentStatus;
+import com.framework.framework.billing.entity.PaymentMethod;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -52,8 +53,9 @@ public class Payment {
    @Column(name = "dt_expiration_in", nullable = false)
    LocalDateTime expirationIn;
 
-   @Column(name = "payment_method", nullable = false)
-   String method;
+   @ManyToOne(optional = false)
+   @JoinColumn(name = "payment_method_id", nullable = false)
+   PaymentMethod paymentMethod;
 
    @Column(name = "status", nullable = false)
    @Enumerated(EnumType.STRING)

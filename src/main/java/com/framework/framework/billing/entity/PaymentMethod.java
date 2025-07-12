@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name = "SF_PAYMENT_METHOD")
@@ -16,12 +15,10 @@ import java.util.UUID;
 @EqualsAndHashCode(of = "id")
 @Builder
 public class PaymentMethod {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private String id;
 
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "enabled", nullable = false)
@@ -39,5 +36,4 @@ public class PaymentMethod {
     public void onPrePersist() {
         this.createdAt = LocalDateTime.now();
     }
-
 }

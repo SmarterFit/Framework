@@ -14,6 +14,4 @@ import java.util.List;
 @ConfigurationProperties(prefix = "payment")
 public class PaymentProperties {
     private List<String> enabledMethods = new ArrayList<>();
-
-
 }

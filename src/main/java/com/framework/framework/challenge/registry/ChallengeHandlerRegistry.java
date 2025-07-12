@@ -24,7 +24,7 @@ public class ChallengeHandlerRegistry {
 
     private void initializeHandlers() {
         for (ChallengeHandler handler : handlers) {
-            String challengeType = handler.getChallengeType();
+            String challengeType = handler.getChallengeTypeId();
 
             if (activeHandlers.containsKey(challengeType)) {
                 throw new IllegalStateException("Duplicate ChallengeHandler for metric: " + challengeType);
@@ -34,8 +34,8 @@ public class ChallengeHandlerRegistry {
         }
     }
 
-    public Optional<ChallengeHandler> getHandler(String metricType) {
-        return Optional.ofNullable(activeHandlers.get(metricType));
+    public Optional<ChallengeHandler> getHandler(String metricTypeId) {
+        return Optional.ofNullable(activeHandlers.get(metricTypeId));
     }
 
     public List<String> getSupportedMetricTypes() {
@@ -46,7 +46,7 @@ public class ChallengeHandlerRegistry {
         return activeHandlers;
     }
 
-    public boolean isSupported(String metricType) {
-        return activeHandlers.containsKey(metricType);
+    public boolean isSupported(String metricTypeId) {
+        return activeHandlers.containsKey(metricTypeId);
     }
 }

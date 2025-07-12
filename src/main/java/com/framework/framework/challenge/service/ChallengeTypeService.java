@@ -32,11 +32,12 @@ public class ChallengeTypeService {
    @Transactional
    public void init() {
       for (Entry<String, ChallengeHandler> entry : challengeHandlerRegistry.getActiveHandlers().entrySet()) {
-         String typeName = entry.getKey();
+         String typeId = entry.getKey();
          ChallengeHandler handler = entry.getValue();
 
          ChallengeType type = challengeTypeRepository.findByName(entry.getKey()).orElseGet(ChallengeType::new);
-         type.setName(typeName);
+         type.setId(typeId);
+         type.setName(handler.getChallengeTypeName());
          type.setEnabled(true);
          type.setHandlerClass(handler.getClass().getName());
          challengeTypeRepository.save(type);
@@ -52,5 +53,4 @@ public class ChallengeTypeService {
             .map(ChallengeTypeMapper::toResponse)
             .toList();
    }
-
 }

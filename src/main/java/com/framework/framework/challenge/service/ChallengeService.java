@@ -1,6 +1,5 @@
 package com.framework.framework.challenge.service;
 
-
 import com.framework.framework.challenge.dto.request.ChallengeGenericMetricRequestDTO;
 import com.framework.framework.challenge.handle.ChallengeHandler;
 import com.framework.framework.challenge.validation.ChallengeHandleValidation;
@@ -20,7 +19,6 @@ import java.util.UUID;
 @Service
 public class ChallengeService {
 
-
     private final ChallengeTrailService challengeTrailService;
     private final ChallengeTrailValidation challengeTrailValidation;
     private final ChallengeQuestValidation challengeQuestValidation;
@@ -28,10 +26,10 @@ public class ChallengeService {
     private final ProfileValidation profileValidation;
 
     public ChallengeService(ChallengeTrailService challengeTrailService,
-                            ChallengeTrailValidation challengeTrailValidation,
-                            ChallengeQuestValidation challengeQuestValidation,
-                            ChallengeHandleValidation challengeHandleValidation,
-                            ProfileValidation profileValidation) {
+            ChallengeTrailValidation challengeTrailValidation,
+            ChallengeQuestValidation challengeQuestValidation,
+            ChallengeHandleValidation challengeHandleValidation,
+            ProfileValidation profileValidation) {
 
         this.challengeTrailService = challengeTrailService;
         this.challengeTrailValidation = challengeTrailValidation;
@@ -41,16 +39,19 @@ public class ChallengeService {
     }
 
     public ChallengeTrailResponseDTO generateChallenge(UUID requesterId,
-                                                       ChallengeGenericMetricRequestDTO genericMetricRequest) throws IOException {
+            ChallengeGenericMetricRequestDTO genericMetricRequest) throws IOException {
 
-        ChallengeQuest challengeQuest = challengeQuestValidation.validateChallengeQuestById(genericMetricRequest.getChallengeQuestId());
-        ChallengeHandler handler = challengeHandleValidation.getHandler(challengeQuest.getChallengeType());
+        ChallengeQuest challengeQuest = challengeQuestValidation
+                .validateChallengeQuestById(genericMetricRequest.getChallengeQuestId());
+        String challengeTypeId = challengeQuest.getChallengeType().getId();
+        ChallengeHandler handler = challengeHandleValidation.getHandler(challengeTypeId);
         Profile profile = profileValidation.validateProfileById(requesterId);
 
-        ChallengeTrail trail = handler.processChallengeQuest(challengeQuest, profile.getId(), genericMetricRequest.getMetricDataDTO());
+        ChallengeTrail trail = handler.processChallengeQuest(challengeQuest, profile.getId(),
+                genericMetricRequest.getMetricDataDTO());
         trail.setChallengeQuest(challengeQuest);
 
-        if(challengeTrailValidation.existsTrailByQuestId(genericMetricRequest.getChallengeQuestId())){
+        if (challengeTrailValidation.existsTrailByQuestId(genericMetricRequest.getChallengeQuestId())) {
             challengeTrailService.deleteChallengeTrailByQuestId(genericMetricRequest.getChallengeQuestId());
         }
         return challengeTrailService.create(trail);

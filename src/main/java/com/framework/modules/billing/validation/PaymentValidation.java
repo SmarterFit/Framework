@@ -46,8 +46,8 @@ public class PaymentValidation {
       }
    }
 
-   public PaymentHandler getMethodPayment (String methodName) {
-      return paymentHandlerRegistry.getHandler(methodName)
-              .orElseThrow(() -> new BusinessException("Payment method not available or disabled: " + methodName));
+   public PaymentHandler getMethodPayment(String methodId) {
+      return paymentHandlerRegistry.getHandler(methodId)
+            .orElseThrow(() -> new BusinessException("Payment method not available or disabled: " + methodId));
    }
 }

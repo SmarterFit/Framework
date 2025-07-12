@@ -1,14 +1,11 @@
 package com.framework.framework.challenge.entity;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
@@ -29,8 +26,7 @@ import lombok.Setter;
 @Builder
 public class ChallengeType {
    @Id
-   @GeneratedValue(strategy = GenerationType.UUID)
-   private UUID id;
+   private String id;
 
    @Column(name = "name", nullable = false, unique = true)
    private String name;

@@ -8,5 +8,6 @@ public interface PaymentHandler {
 
     public PaymentProcessorResponseDTO processPayment(ProcessorPaymentRequestDTO processorDTO);
 
+    public String getPaymentMethodId();
     public String getPaymentMethodName();
 }

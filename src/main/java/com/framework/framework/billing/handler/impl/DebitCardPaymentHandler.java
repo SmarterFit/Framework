@@ -14,7 +14,12 @@ public class DebitCardPaymentHandler implements PaymentHandler {
     }
 
     @Override
-    public String getPaymentMethodName() {
+    public String getPaymentMethodId() {
         return "DEBIT_CARD";
+    }
+
+    @Override
+    public String getPaymentMethodName() {
+        return "Cartão de Débito";
     }
 }

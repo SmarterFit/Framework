@@ -1,7 +1,5 @@
 package com.framework.framework.billing.dto.response;
 
-import java.util.UUID;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder(toBuilder = true)
 public class PaymentMethodResponseDTO {
-   private UUID id;
+   private String id;
    private String name;
    private boolean enabled;
 }

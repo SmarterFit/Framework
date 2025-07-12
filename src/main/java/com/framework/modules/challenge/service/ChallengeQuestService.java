@@ -1,6 +1,7 @@
 package com.framework.modules.challenge.service;
 
-
+import com.framework.framework.challenge.entity.ChallengeType;
+import com.framework.framework.challenge.validation.ChallengeHandleValidation;
 import com.framework.framework.usermetric.entity.generic.MetricType;
 import com.framework.modules.challenge.dto.request.ChallengeQuestRequestDTO;
 import com.framework.modules.challenge.dto.response.ChallengeQuestResponseDTO;
@@ -24,17 +25,19 @@ public class ChallengeQuestService {
     private final ChallengeQuestValidation challengeQuestValidation;
     private final ProfileValidation profileValidation;
     private final MetricTypeValidation metricTypeValidation;
+    private final ChallengeHandleValidation challengeTypeValidation;
 
     public ChallengeQuestService(
             ChallengeQuestRepository challengeQuestRepository,
             ChallengeQuestValidation challengeQuestValidation,
             ProfileValidation profileValidation,
-            MetricTypeValidation metricTypeValidation
-    ) {
+            MetricTypeValidation metricTypeValidation,
+            ChallengeHandleValidation challengeTypeValidation) {
         this.challengeQuestRepository = challengeQuestRepository;
         this.challengeQuestValidation = challengeQuestValidation;
         this.profileValidation = profileValidation;
         this.metricTypeValidation = metricTypeValidation;
+        this.challengeTypeValidation = challengeTypeValidation;
     }
 
     @Transactional
@@ -43,8 +46,10 @@ public class ChallengeQuestService {
         challengeQuestValidation.validateChallengeQuestDates(requestDTO.getStartDate(), requestDTO.getEndDate());
 
         MetricType metricType = metricTypeValidation.validateMetricTypeById(requestDTO.getMetricTypeId());
+        ChallengeType challengeType = challengeTypeValidation
+                .validateEnabledChallengeTypeById(requestDTO.getChallengeType());
 
-        ChallengeQuest quest = ChallengeQuestMapper.toEntity(requestDTO, profile, metricType);
+        ChallengeQuest quest = ChallengeQuestMapper.toEntity(requestDTO, profile, metricType, challengeType);
         quest.setCreatedAt(LocalDateTime.now());
 
         challengeQuestRepository.save(quest);
@@ -58,8 +63,6 @@ public class ChallengeQuestService {
         return ChallengeQuestMapper.toResponse(quest);
     }
 
-
-
     @Transactional
     public ChallengeQuestResponseDTO updateChallengeQuest(UUID questId, ChallengeQuestRequestDTO requestDTO) {
         ChallengeQuest quest = challengeQuestValidation.validateChallengeQuestById(questId);
@@ -68,7 +71,8 @@ public class ChallengeQuestService {
 
         MetricType metricType = metricTypeValidation.validateMetricTypeById(requestDTO.getMetricTypeId());
 
-        ChallengeQuest updated = ChallengeQuestMapper.toEntity(requestDTO, metricType, quest.getProfile(), quest);
+        ChallengeQuest updated = ChallengeQuestMapper.toEntity(requestDTO, metricType, quest.getProfile(),
+                quest.getChallengeType(), quest);
         challengeQuestRepository.save(updated);
 
         return ChallengeQuestMapper.toResponse(updated);

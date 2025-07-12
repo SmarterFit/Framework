@@ -12,7 +12,12 @@ public class BoletoPaymentHandler implements PaymentHandler {
    }
 
    @Override
-   public String getPaymentMethodName() {
+   public String getPaymentMethodId() {
       return "BOLETO";
+   }
+
+   @Override
+   public String getPaymentMethodName() {
+      return "Boleto Bancário";
    }
 }

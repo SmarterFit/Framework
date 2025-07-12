@@ -19,8 +19,13 @@ public class PaymentMethodValidation {
       this.paymentHandlerRegistry = paymentHandlerRegistry;
    }
 
-   public PaymentMethod validatePaymentMethodName(String name) {
-      return paymentMethodRepository.findByName(name)
+   public PaymentMethod validatePaymentMethodId(String id) {
+      return paymentMethodRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Payment method not found"));
+   }
+
+   public PaymentMethod validateEnabledPaymentMethodId(String id) {
+      return paymentMethodRepository.findByIdAndEnabledTrue(id)
             .orElseThrow(() -> new ResourceNotFoundException("Payment method not found"));
    }
 

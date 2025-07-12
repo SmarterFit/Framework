@@ -3,7 +3,9 @@ package com.framework.modules.billing.service;
 import com.framework.common.config.BusinessRules;
 import com.framework.common.enums.PaymentStatus;
 import com.framework.common.exceptions.BusinessException;
+import com.framework.framework.billing.entity.PaymentMethod;
 import com.framework.framework.billing.handler.PaymentHandler;
+import com.framework.framework.billing.validation.PaymentMethodValidation;
 import com.framework.framework.gamification.dto.request.GamificationEventRequestDTO;
 import com.framework.framework.gamification.event.GamificationEvent;
 import com.framework.modules.billing.dto.request.payment.CreatePaymentRequestDTO;
@@ -40,15 +42,18 @@ public class PaymentService {
    private final PaymentRepository paymentRepository;
    private final PaymentValidation paymentValidation;
    private final SubscriptionValidation subscriptionValidation;
+   private final PaymentMethodValidation paymentMethodValidation;
    private final ApplicationEventPublisher publisher;
 
    @Autowired
    public PaymentService(PaymentRepository paymentRepository,
          PaymentValidation paymentValidation,
-         SubscriptionValidation subscriptionValidation, ApplicationEventPublisher publisher) {
+         SubscriptionValidation subscriptionValidation, PaymentMethodValidation paymentMethodValidation,
+         ApplicationEventPublisher publisher) {
       this.paymentRepository = paymentRepository;
       this.paymentValidation = paymentValidation;
       this.subscriptionValidation = subscriptionValidation;
+      this.paymentMethodValidation = paymentMethodValidation;
       this.publisher = publisher;
    }
 
@@ -59,7 +64,9 @@ public class PaymentService {
 
       paymentValidation.validateNotHasPendingPaymentForSubscription(subscription);
 
-      Payment payment = PaymentMapper.toEntity(requestDTO, subscription);
+      PaymentMethod paymentMethod = paymentMethodValidation.validateEnabledPaymentMethodId(requestDTO.getMethodId());
+
+      Payment payment = PaymentMapper.toEntity(requestDTO, subscription, paymentMethod);
       payment.setExpirationIn(LocalDateTime.now().plusDays(BusinessRules.PAYMENT_EXPIRATION_DAYS));
 
       paymentRepository.save(payment);
@@ -111,7 +118,8 @@ public class PaymentService {
       paymentValidation.validatePaymentNotExpired(payment);
       subscriptionValidation.validateSubscriptionNotIsCanceled(subscription);
 
-      PaymentHandler paymentHandler = paymentValidation.getMethodPayment(payment.getMethod());
+      String paymentMethodId = payment.getPaymentMethod().getId();
+      PaymentHandler paymentHandler = paymentValidation.getMethodPayment(paymentMethodId);
       System.out.println("Pagamento realizado via : " + paymentHandler.getPaymentMethodName());
       PaymentProcessorResponseDTO response = paymentHandler.processPayment(requestDTO);
 
@@ -120,17 +128,7 @@ public class PaymentService {
          payment.setPaymentDate(LocalDateTime.now());
          paymentRepository.save(payment);
 
-         User user = payment.getSubscription().getOwner();
-
-         GamificationEventRequestDTO dto = GamificationEventRequestDTO.builder()
-               .eventType("payment-processed")
-               .userId(user.getId())
-               .details(Map.of("paymentSuccess", Boolean.TRUE))
-               .build();
-         GamificationEvent event = new GamificationEvent(dto);
-         publisher.publishEvent(event);
-
-         publisher.publishEvent(new PaymentConfirmedEvent(subscription));
+         sendPaymentEvents(subscription);
 
          return response;
       } else {
@@ -168,5 +166,19 @@ public class PaymentService {
    @Transactional
    public void cancelPaymentsByPlan(UUID planId) {
       paymentRepository.updateStatusByPlanId(planId, PaymentStatus.CANCELED, PaymentStatus.PENDING);
+   }
+
+   private void sendPaymentEvents(Subscription subscription) {
+      User user = subscription.getOwner();
+
+      GamificationEventRequestDTO dto = GamificationEventRequestDTO.builder()
+            .eventType("payment-processed")
+            .userId(user.getId())
+            .details(Map.of("paymentSuccess", Boolean.TRUE))
+            .build();
+      GamificationEvent event = new GamificationEvent(dto);
+      publisher.publishEvent(event);
+
+      publisher.publishEvent(new PaymentConfirmedEvent(subscription));
    }
 }

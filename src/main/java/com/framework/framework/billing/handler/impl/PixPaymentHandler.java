@@ -6,14 +6,19 @@ import com.framework.modules.billing.dto.response.payment.PaymentProcessorRespon
 import org.springframework.stereotype.Component;
 
 @Component
-public class PixPaymentHandler  implements PaymentHandler {
+public class PixPaymentHandler implements PaymentHandler {
     @Override
     public PaymentProcessorResponseDTO processPayment(ProcessorPaymentRequestDTO processorDTO) {
         return new PaymentProcessorResponseDTO("Payment processed", true);
     }
 
     @Override
-    public String getPaymentMethodName() {
+    public String getPaymentMethodId() {
         return "PIX";
+    }
+
+    @Override
+    public String getPaymentMethodName() {
+        return "Pix";
     }
 }

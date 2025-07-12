@@ -7,15 +7,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CreditCardPaymentHandler implements PaymentHandler {
-
-
     @Override
     public PaymentProcessorResponseDTO processPayment(ProcessorPaymentRequestDTO processorDTO) {
         return new PaymentProcessorResponseDTO("Payment processed", true);
     }
 
     @Override
-    public String getPaymentMethodName() {
+    public String getPaymentMethodId() {
         return "CREDIT_CARD";
+    }
+
+    @Override
+    public String getPaymentMethodName() {
+        return "Cartão de Crédito";
     }
 }

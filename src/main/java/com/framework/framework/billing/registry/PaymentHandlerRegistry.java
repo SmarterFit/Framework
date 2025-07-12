@@ -31,20 +31,20 @@ public class PaymentHandlerRegistry {
 
     private void initializeActiveHandlers() {
         for (PaymentHandler handler : handlers) {
-            String methodName = handler.getPaymentMethodName();
+            String methodId = handler.getPaymentMethodId();
 
-            if (!enabledSet.contains(methodName)) {
+            if (!enabledSet.contains(methodId)) {
                 continue;
-            } else if (activeHandlers.containsKey(methodName)) {
-                throw new IllegalStateException("Duplicate payment method name detected: " + methodName);
+            } else if (activeHandlers.containsKey(methodId)) {
+                throw new IllegalStateException("Duplicate payment method id detected: " + methodId);
             }
 
-            activeHandlers.put(methodName, handler);
+            activeHandlers.put(methodId, handler);
         }
     }
 
-    public Optional<PaymentHandler> getHandler(String methodName) {
-        return Optional.ofNullable(activeHandlers.get(methodName));
+    public Optional<PaymentHandler> getHandler(String methodId) {
+        return Optional.ofNullable(activeHandlers.get(methodId));
     }
 
     public List<String> getSupportedMethods() {
@@ -55,21 +55,21 @@ public class PaymentHandlerRegistry {
         return activeHandlers;
     }
 
-    public boolean isMethodEnabled(String methodName) {
-        return activeHandlers.containsKey(methodName);
+    public boolean isMethodEnabled(String methodId) {
+        return activeHandlers.containsKey(methodId);
     }
 
     public List<PaymentHandler> getHandlers() {
         return handlers;
     }
 
-    public void enableHandler(String methodName, PaymentHandler handler) {
-        enabledSet.add(methodName);
-        activeHandlers.put(methodName, handler);
+    public void enableHandler(String methodId, PaymentHandler handler) {
+        enabledSet.add(methodId);
+        activeHandlers.put(methodId, handler);
     }
 
-    public void disableHandler(String methodName) {
-        enabledSet.remove(methodName);
-        activeHandlers.remove(methodName);
+    public void disableHandler(String methodId) {
+        enabledSet.remove(methodId);
+        activeHandlers.remove(methodId);
     }
 }

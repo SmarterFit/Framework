@@ -2,6 +2,7 @@ package com.framework.modules.challenge.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.framework.common.enums.ExperienceLevel;
+import com.framework.framework.challenge.entity.ChallengeType;
 import com.framework.framework.usermetric.entity.generic.MetricType;
 import com.framework.modules.useraccess.entity.Profile;
 import jakarta.persistence.*;
@@ -31,7 +32,9 @@ public class ChallengeQuest {
 
     private String title;
 
-    private String challengeType;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "challenge_type_id", nullable = false)
+    private ChallengeType challengeType;
 
     @Builder.Default
     @Enumerated(EnumType.STRING)
@@ -53,14 +56,10 @@ public class ChallengeQuest {
     private MetricType metricType;
 
     @ElementCollection(targetClass = DayOfWeek.class)
-    @CollectionTable(
-            name = "challenge_quest_week_days",
-            joinColumns = @JoinColumn(name = "challenge_quest_id")
-    )
+    @CollectionTable(name = "challenge_quest_week_days", joinColumns = @JoinColumn(name = "challenge_quest_id"))
     @Enumerated(EnumType.STRING)
     @Column(name = "day_of_week")
     private List<DayOfWeek> daysOfWeek;
-
 
     @Column(name = "dt_created_at", nullable = false, updatable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -71,4 +70,3 @@ public class ChallengeQuest {
         this.createdAt = LocalDateTime.now();
     }
 }
-

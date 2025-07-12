@@ -19,6 +19,6 @@ public class CreatePaymentRequestDTO {
     @NotNull(message = "Subscription ID cannot be null")
     private UUID subscriptionId;
 
-    @NotNull(message = "method cannot be null")
-    private String method;
+    @NotNull(message = "method id cannot be null")
+    private String methodId;
 }

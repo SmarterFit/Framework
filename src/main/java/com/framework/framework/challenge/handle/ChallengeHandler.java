@@ -38,7 +38,8 @@ public abstract class ChallengeHandler {
 
     protected abstract String fetchUserMetric(MetricType metricType, UUID userId, MetricDataDTO metricDataDTO);
 
-    public abstract String getChallengeType();
+    public abstract String getChallengeTypeId();
+    public abstract String getChallengeTypeName();
 
     public final ChallengeTrail processChallengeQuest(ChallengeQuest quest, UUID userId,
             MetricDataDTO metricDataDTO) throws IOException {

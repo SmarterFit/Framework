@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.framework.common.enums.PaymentStatus;
+import com.framework.framework.billing.dto.response.PaymentMethodResponseDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +22,6 @@ public class PaymentResponseDTO {
    private Double amount;
    private LocalDateTime paymentDate;
    private LocalDateTime expirationIn;
-   private String method;
+   private PaymentMethodResponseDTO method;
    private PaymentStatus status;
 }

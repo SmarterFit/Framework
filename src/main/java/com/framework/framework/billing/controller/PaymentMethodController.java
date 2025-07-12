@@ -30,13 +30,13 @@ public class PaymentMethodController {
       return ResponseEntity.ok(paymentMethodService.getEnabledPaymentMethods());
    }
 
-   @PatchMapping("/{name}/ativar")
-   public ResponseEntity<PaymentMethodResponseDTO> enablePaymentMethod(@PathVariable String name) {
-      return ResponseEntity.ok(paymentMethodService.enablePaymentMethod(name));
+   @PatchMapping("/{id}/ativar")
+   public ResponseEntity<PaymentMethodResponseDTO> enablePaymentMethod(@PathVariable String id) {
+      return ResponseEntity.ok(paymentMethodService.enablePaymentMethod(id));
    }
 
-   @PatchMapping("/{name}/desativar")
-   public ResponseEntity<PaymentMethodResponseDTO> disablePaymentMethod(@PathVariable String name) {
-      return ResponseEntity.ok(paymentMethodService.disablePaymentMethod(name));
+   @PatchMapping("/{id}/desativar")
+   public ResponseEntity<PaymentMethodResponseDTO> disablePaymentMethod(@PathVariable String id) {
+      return ResponseEntity.ok(paymentMethodService.disablePaymentMethod(id));
    }
 }

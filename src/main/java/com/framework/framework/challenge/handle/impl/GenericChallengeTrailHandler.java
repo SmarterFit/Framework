@@ -36,7 +36,12 @@ public class GenericChallengeTrailHandler extends ChallengeHandler {
    }
 
    @Override
-   public String getChallengeType() {
+   public String getChallengeTypeId() {
       return "CHALLENGE_GENERIC";
+   }
+
+   @Override
+   public String getChallengeTypeName() {
+      return "Desafio Geral";
    }
 }

@@ -6,6 +6,7 @@ import com.framework.modules.billing.repository.PlanRepository;
 import com.framework.modules.classgroup.dto.request.classgroupplan.CreateClassGroupPlanDTO;
 import com.framework.modules.classgroup.entity.ClassGroup;
 import com.framework.modules.classgroup.entity.ClassGroupPlan;
+import com.framework.modules.classgroup.event.ClassGroupDeactivatedEvent;
 import com.framework.modules.classgroup.mapper.ClassGroupPlanMapper;
 import com.framework.modules.classgroup.repository.ClassGroupPlanRepository;
 import com.framework.modules.classgroup.validation.ValidationFaced;
@@ -17,7 +18,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-
 @Service
 public class ClassGroupPlanService {
     private final ClassGroupPlanRepository classGroupPlanRepository;
@@ -25,11 +25,10 @@ public class ClassGroupPlanService {
     private final ValidationFaced validationFaced;
     private final ApplicationEventPublisher publisher;
 
-
     public ClassGroupPlanService(ClassGroupPlanRepository classGroupPlanRepository,
-                             ValidationFaced validationFaced,
-                             ApplicationEventPublisher publisher,
-                             PlanRepository planRepository) {
+            ValidationFaced validationFaced,
+            ApplicationEventPublisher publisher,
+            PlanRepository planRepository) {
 
         this.classGroupPlanRepository = classGroupPlanRepository;
         this.validationFaced = validationFaced;
@@ -41,8 +40,10 @@ public class ClassGroupPlanService {
     @Transactional
     public void addPlanToClassGroup(CreateClassGroupPlanDTO requestDTO) {
 
-        validationFaced.classGroupPlanValidation.validateClassGroupPlanExists(requestDTO.getPlanId(), requestDTO.getClassGroupId());
-        ClassGroup classGroup = validationFaced.classGroupValidation.validateClassGroupById(requestDTO.getClassGroupId());
+        validationFaced.classGroupPlanValidation.validateClassGroupPlanExists(requestDTO.getPlanId(),
+                requestDTO.getClassGroupId());
+        ClassGroup classGroup = validationFaced.classGroupValidation
+                .validateClassGroupById(requestDTO.getClassGroupId());
 
         Plan plan = validationFaced.planValidation.validatePlanById(requestDTO.getPlanId());
         ClassGroupPlan classGroupPlan = new ClassGroupPlan(classGroup, plan);
@@ -68,7 +69,6 @@ public class ClassGroupPlanService {
                 .collect(Collectors.toList());
     }
 
-
     @Transactional
     public void removePlanToClassGroup(UUID planId, UUID classGroupId) {
         validationFaced.classGroupPlanValidation.validateClassGroupPlanNotExists(planId, classGroupId);
@@ -78,8 +78,7 @@ public class ClassGroupPlanService {
 
         ClassGroup classGroup = validationFaced.classGroupValidation.validateClassGroupById(classGroupId);
 
-//        TODO: FIX BUG
-//        publisher.publishEvent(new ClassGroupDeactivatedEvent(classGroup));
+        ///publisher.publishEvent(new ClassGroupDeactivatedEvent(classGroup));
 
         classGroupPlanRepository.delete(classGroupPlan);
     }
