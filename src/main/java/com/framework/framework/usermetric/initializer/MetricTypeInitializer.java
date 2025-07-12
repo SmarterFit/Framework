@@ -1,6 +1,5 @@
 package com.framework.framework.usermetric.initializer;
 
-
 import com.framework.framework.usermetric.entity.generic.MetricType;
 import com.framework.modules.metric.repository.MetricTypeRepository;
 import org.slf4j.Logger;
@@ -23,9 +22,16 @@ public class MetricTypeInitializer {
 
     public Set<String> initializeMetricTypes() {
         try {
-            createIfNotExists("Nota", "points", 0, 10);
-            createIfNotExists("Peso", "kg", 0, 800);
-            createIfNotExists("Altura", "cm", 0, 300);
+            createIfNotExists("Altura", "cm", 50, 300);
+            createIfNotExists("Peso", "kg", 20, 800);
+            createIfNotExists("Percentual de Gordura", "%", 1, 75);
+            createIfNotExists("Massa Muscular", "kg", 10, 150);
+            createIfNotExists("Cintura", "cm", 40, 200);
+            createIfNotExists("Quadril", "cm", 40, 200);
+            createIfNotExists("Braço", "cm", 15, 70);
+            createIfNotExists("Coxa", "cm", 30, 120);
+            createIfNotExists("Pressão Arterial", "sistólica/diastólica", 0, 0);
+            createIfNotExists("Frequência Cardíaca", "bpm", 30, 220);
             logger.info("Metric types initialized successfully");
             return Set.copyOf(systemMetricTypes);
 
