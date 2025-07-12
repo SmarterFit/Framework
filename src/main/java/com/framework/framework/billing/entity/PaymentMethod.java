@@ -21,7 +21,7 @@ public class PaymentMethod {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
     @Column(name = "enabled", nullable = false)
@@ -36,7 +36,8 @@ public class PaymentMethod {
     private LocalDateTime createdAt;
 
     @PrePersist
-    public void onPrePersist() {this.createdAt = LocalDateTime.now();}
-
+    public void onPrePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
 
 }

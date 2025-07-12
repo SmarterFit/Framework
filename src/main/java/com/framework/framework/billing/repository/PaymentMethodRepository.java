@@ -16,6 +16,8 @@ public interface PaymentMethodRepository extends JpaRepository<PaymentMethod, UU
 
     Optional<PaymentMethod> findByName(String name);
 
+    List<PaymentMethod> findAllByEnabledTrue();
+
     @Modifying
     @Transactional
     @Query("UPDATE PaymentMethod m SET m.enabled = false WHERE m.name NOT IN :activeNames")

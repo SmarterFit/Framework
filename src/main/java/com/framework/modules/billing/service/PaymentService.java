@@ -3,7 +3,6 @@ package com.framework.modules.billing.service;
 import com.framework.common.config.BusinessRules;
 import com.framework.common.enums.PaymentStatus;
 import com.framework.common.exceptions.BusinessException;
-import com.framework.framework.billing.registry.PaymentHandlerRegistry;
 import com.framework.framework.billing.handler.PaymentHandler;
 import com.framework.framework.gamification.dto.request.GamificationEventRequestDTO;
 import com.framework.framework.gamification.event.GamificationEvent;
@@ -41,18 +40,15 @@ public class PaymentService {
    private final PaymentRepository paymentRepository;
    private final PaymentValidation paymentValidation;
    private final SubscriptionValidation subscriptionValidation;
-   private final PaymentHandlerRegistry paymentHandlerRegistry;
    private final ApplicationEventPublisher publisher;
 
    @Autowired
    public PaymentService(PaymentRepository paymentRepository,
          PaymentValidation paymentValidation,
-         SubscriptionValidation subscriptionValidation, ApplicationEventPublisher publisher,
-         PaymentHandlerRegistry paymentHandlerRegistry) {
+         SubscriptionValidation subscriptionValidation, ApplicationEventPublisher publisher) {
       this.paymentRepository = paymentRepository;
       this.paymentValidation = paymentValidation;
       this.subscriptionValidation = subscriptionValidation;
-      this.paymentHandlerRegistry = paymentHandlerRegistry;
       this.publisher = publisher;
    }
 
@@ -173,15 +169,4 @@ public class PaymentService {
    public void cancelPaymentsByPlan(UUID planId) {
       paymentRepository.updateStatusByPlanId(planId, PaymentStatus.CANCELED, PaymentStatus.PENDING);
    }
-
-   @Transactional
-   public void disablePaymentMethod(String methodName) {
-      paymentHandlerRegistry.disablePaymentMethod(methodName);
-   }
-
-   @Transactional
-   public void activePaymentMethod(String methodName) {
-      paymentHandlerRegistry.activePaymentMethod(methodName);
-   }
-
 }

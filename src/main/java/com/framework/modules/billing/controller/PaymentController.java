@@ -90,16 +90,4 @@ public class PaymentController {
       paymentService.cancelPayment(id);
       return ResponseEntity.noContent().build();
    }
-
-   @PutMapping("/ativar-metodo/{methodName}")
-   public ResponseEntity<Void> activePaymentMethod(@PathVariable String methodName) {
-      paymentService.activePaymentMethod(methodName);
-      return ResponseEntity.noContent().build();
-   }
-
-   @PutMapping("/desativar-metodo/{methodName}")
-   public ResponseEntity<Void> disablePaymentMethod(@PathVariable String methodName) {
-      paymentService.disablePaymentMethod(methodName);
-      return ResponseEntity.noContent().build();
-   }
 }
