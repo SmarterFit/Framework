@@ -31,7 +31,7 @@ public abstract class ChallengeHandler {
     protected ChallengeDayCalculator challengeDayCalculator = new ChallengeDayCalculator();
 
     protected ChallengeHandler(@Qualifier("challengeChatClient") ChatClient chatClient,
-                               UserMetricService userMetricService) {
+            UserMetricService userMetricService) {
         this.chatClient = chatClient;
         this.userMetricService = userMetricService;
     }
@@ -40,11 +40,8 @@ public abstract class ChallengeHandler {
 
     public abstract String getChallengeType();
 
-
-
-
     public final ChallengeTrail processChallengeQuest(ChallengeQuest quest, UUID userId,
-                                                      MetricDataDTO metricDataDTO)  throws IOException {
+            MetricDataDTO metricDataDTO) throws IOException {
 
         String lastMetric = fetchUserMetric(quest.getMetricType(), userId, metricDataDTO);
         List<LocalDate> maxChallengeDays = challengeDayCalculator.calculateChallengeDays(
@@ -74,15 +71,16 @@ public abstract class ChallengeHandler {
                     .call()
                     .content();
 
-
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(aiResponse, new TypeReference<List<ChallengeAiDTO>>() {});
+            return mapper.readValue(aiResponse, new TypeReference<List<ChallengeAiDTO>>() {
+            });
         } catch (IOException e) {
             throw new ChallengeProcessingException("Error parsing AI response", e);
         }
     }
 
-    private ChallengeTrail generateTrail(ChallengeQuest quest, List<ChallengeAiDTO> challengeAiDTOS, List<LocalDate> maxChallengeDays) {
+    private ChallengeTrail generateTrail(ChallengeQuest quest, List<ChallengeAiDTO> challengeAiDTOS,
+            List<LocalDate> maxChallengeDays) {
         if (maxChallengeDays.size() != challengeAiDTOS.size()) {
             throw new IllegalStateException("Number of challenge days does not match AI response.");
         }

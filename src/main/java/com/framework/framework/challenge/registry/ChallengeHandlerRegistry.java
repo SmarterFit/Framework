@@ -1,6 +1,7 @@
 package com.framework.framework.challenge.registry;
 
 import com.framework.framework.challenge.handle.ChallengeHandler;
+
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
@@ -39,6 +40,10 @@ public class ChallengeHandlerRegistry {
 
     public List<String> getSupportedMetricTypes() {
         return List.copyOf(activeHandlers.keySet());
+    }
+
+    public Map<String, ChallengeHandler> getActiveHandlers() {
+        return activeHandlers;
     }
 
     public boolean isSupported(String metricType) {

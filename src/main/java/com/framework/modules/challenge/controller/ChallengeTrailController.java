@@ -6,7 +6,6 @@ import com.framework.modules.challenge.service.ChallengeTrailService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -22,7 +21,7 @@ public class ChallengeTrailController {
 
     @PostMapping
     public ResponseEntity<ChallengeTrailResponseDTO> create(@RequestBody ChallengeTrailRequestDTO request,
-                                                            @RequestHeader("X-User-Id") UUID requesterId) {
+            @RequestHeader("X-User-Id") UUID requesterId) {
         return ResponseEntity.status(201).body(service.create(request, requesterId));
     }
 
