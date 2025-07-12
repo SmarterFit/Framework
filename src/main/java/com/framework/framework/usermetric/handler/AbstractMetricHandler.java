@@ -12,22 +12,23 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public abstract class  AbstractMetricHandler implements MetricHandler{
+public abstract class AbstractMetricHandler implements MetricHandler {
 
     @Override
     public MetricProcessResult handle(MetricDataDTO request, MetricType metricType, Profile profile, String source) {
         MetricValidationContext context = validate(request, metricType);
+        afterValidation(context);
         List<String> alerts = analyze(context);
-        AbstractMetricRecord record =  build(context, profile, source);
+        AbstractMetricRecord record = build(context, profile, source);
         MetricDataResponseDTO responseDTO = toResponseDTO(record);
         return new MetricProcessResult(record, responseDTO, alerts);
-
     }
+
     protected abstract MetricValidationContext validate(MetricDataDTO request, MetricType metricType);
 
     protected abstract List<String> analyze(MetricValidationContext context);
 
-    protected abstract AbstractMetricRecord build(MetricValidationContext context,Profile profile, String source);
+    protected abstract AbstractMetricRecord build(MetricValidationContext context, Profile profile, String source);
 
     @Override
     public abstract MetricDataResponseDTO toResponseDTO(AbstractMetricRecord record);
@@ -35,4 +36,7 @@ public abstract class  AbstractMetricHandler implements MetricHandler{
     @Override
     public abstract String getSupportedType();
 
+    public void afterValidation(MetricValidationContext context) {
+        // no-op
+    }
 }
