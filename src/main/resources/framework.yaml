@@ -1,6 +1,7 @@
 gamification:
   enabled: true
   events:
+    - "grades"
     - "check-in"
 
 payment:
@@ -8,9 +9,9 @@ payment:
     - "PIX"
     - "CREDIT_CARD"
     - "DEBIT_CARD"
+    - "BOLETO"
 
 import:
     enabled-methods:
         - "JSON"
         - "CSV"
-
