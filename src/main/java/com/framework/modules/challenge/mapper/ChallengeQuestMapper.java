@@ -4,6 +4,7 @@ import com.framework.common.mapper.GenericMapper;
 import com.framework.framework.challenge.entity.ChallengeType;
 import com.framework.framework.challenge.mapper.ChallengeTypeMapper;
 import com.framework.framework.usermetric.entity.generic.MetricType;
+import com.framework.framework.usermetric.mapper.MetricTypeMapper;
 import com.framework.modules.challenge.dto.request.ChallengeQuestRequestDTO;
 import com.framework.modules.challenge.dto.response.ChallengeQuestResponseDTO;
 import com.framework.modules.challenge.entity.ChallengeQuest;
@@ -33,17 +34,16 @@ public class ChallengeQuestMapper {
     }
 
     public static ChallengeQuestResponseDTO toResponse(ChallengeQuest challengeQuest) {
-        return ChallengeQuestResponseDTO.builder()
-                .id(challengeQuest.getId())
-                .metricType(challengeQuest.getMetricType())
-                .title(challengeQuest.getTitle())
-                .experienceLevel(challengeQuest.getExperienceLevel())
-                .daysOfWeek(challengeQuest.getDaysOfWeek())
-                .description(challengeQuest.getDescription())
-                .startDate(challengeQuest.getStartDate())
-                .endDate(challengeQuest.getEndDate())
+        if (challengeQuest == null) {
+            return null;
+        }
+
+        ChallengeQuestResponseDTO response = GenericMapper.map(challengeQuest, ChallengeQuestResponseDTO.class);
+        response = response.toBuilder()
                 .challengeType(ChallengeTypeMapper.toResponse(challengeQuest.getChallengeType()))
+                .metricType(MetricTypeMapper.toResponse(challengeQuest.getMetricType()))
                 .build();
+        return response;
     }
 
 }

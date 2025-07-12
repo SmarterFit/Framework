@@ -2,7 +2,7 @@ package com.framework.modules.challenge.dto.response;
 
 import com.framework.common.enums.ExperienceLevel;
 import com.framework.framework.challenge.dto.response.ChallengeTypeResponseDTO;
-import com.framework.framework.usermetric.entity.generic.MetricType;
+import com.framework.framework.usermetric.entity.MetricTypeResponseDTO;
 import lombok.*;
 
 import java.time.DayOfWeek;
@@ -19,7 +19,7 @@ public class ChallengeQuestResponseDTO {
 
     private UUID id;
 
-    private MetricType metricType;
+    private MetricTypeResponseDTO metricType;
 
     private String title;
 

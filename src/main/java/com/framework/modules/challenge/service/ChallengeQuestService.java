@@ -51,7 +51,6 @@ public class ChallengeQuestService {
 
         ChallengeQuest quest = ChallengeQuestMapper.toEntity(requestDTO, profile, metricType, challengeType);
         quest.setCreatedAt(LocalDateTime.now());
-
         challengeQuestRepository.save(quest);
 
         return ChallengeQuestMapper.toResponse(quest);
