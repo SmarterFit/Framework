@@ -3,11 +3,9 @@ package com.framework.framework.usermetric.initializer;
 
 import com.framework.framework.usermetric.entity.generic.MetricType;
 import com.framework.modules.metric.repository.MetricTypeRepository;
-import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;

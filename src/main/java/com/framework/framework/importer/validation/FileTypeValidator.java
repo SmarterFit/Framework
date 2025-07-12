@@ -21,7 +21,11 @@ public class FileTypeValidator {
             throw new IllegalArgumentException("File or Content-Type cannot be null");
         }
 
-        String contentType = file.getContentType().toLowerCase();
+        String rawContentType = file.getContentType();
+        if (rawContentType == null) {
+            throw new IllegalArgumentException("File Content-Type cannot be null");
+        }
+        String contentType = rawContentType.toLowerCase();
 
         Optional<String> matchedMethod = importHandlerRegistry.getSupportedMethods().stream()
                 .filter(methodName -> contentType.contains(methodName.toLowerCase()))

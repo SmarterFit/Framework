@@ -39,6 +39,7 @@ public class MetricType {
 
 
     @OneToMany(mappedBy = "metricType", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Builder.Default
     private Set<AbstractMetricRecord> MetricRecord = new HashSet<AbstractMetricRecord>();
 
     @Column(name = "dt_created_at", nullable = false, updatable = false)

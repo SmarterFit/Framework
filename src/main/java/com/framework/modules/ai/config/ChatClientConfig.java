@@ -5,7 +5,6 @@ import com.framework.modules.ai.tools.classes.ClassPlansTools;
 import com.framework.modules.ai.tools.classes.ClassSessionTools;
 import com.framework.modules.ai.tools.classes.ClassTools;
 import com.framework.modules.ai.tools.classes.UserClassTools;
-import com.framework.modules.ai.tools.user.ProfileMetricTools;
 import com.framework.modules.ai.tools.user.ProfileTools;
 import com.framework.modules.ai.tools.user.UserTools;
 import org.springframework.ai.chat.client.ChatClient;
@@ -27,7 +26,6 @@ public class ChatClientConfig {
    @Value("classpath:prompts/smarterfit-gym-system.txt")
    private Resource gymPrompt;
 
-
    private final MessageChatMemoryAdvisor memoryAdvisor;
    private final PlanTools planTools;
    private final ClassTools classTools;
@@ -36,13 +34,12 @@ public class ChatClientConfig {
    private final ClassPlansTools classPlansTools;
    private final UserTools userTools;
    private final ProfileTools profileTools;
-   private final ProfileMetricTools profileMetricTools;
 
    @Autowired
-   public ChatClientConfig( PlanTools planTools, ClassTools classTools, UserClassTools userClassTools,
-                            ClassSessionTools classSessionTools, ClassPlansTools classPlansTools, UserTools userTools,
-                            ProfileTools profileTools, ProfileMetricTools profileMetricTools,
-                            MessageChatMemoryAdvisor memoryAdvisor){
+   public ChatClientConfig(PlanTools planTools, ClassTools classTools, UserClassTools userClassTools,
+         ClassSessionTools classSessionTools, ClassPlansTools classPlansTools, UserTools userTools,
+         ProfileTools profileTools,
+         MessageChatMemoryAdvisor memoryAdvisor) {
       this.planTools = planTools;
       this.classTools = classTools;
       this.userClassTools = userClassTools;
@@ -50,7 +47,6 @@ public class ChatClientConfig {
       this.classSessionTools = classSessionTools;
       this.userTools = userTools;
       this.profileTools = profileTools;
-      this.profileMetricTools = profileMetricTools;
       this.memoryAdvisor = memoryAdvisor;
    }
 
@@ -63,16 +59,14 @@ public class ChatClientConfig {
    public ChatClient gymChatClient(ChatClient.Builder builder) throws IOException {
       String conversationId = UUID.randomUUID().toString();
 
-
       return builder
-              .defaultSystem(loadPrompt(gymPrompt))
-              .defaultAdvisors(advisor -> advisor
-                      .param("conversationId", conversationId)
-                      .param("memoryAdvisor", memoryAdvisor)
-              )
-              .defaultTools(planTools, classTools, userClassTools,
-                      classSessionTools, classPlansTools, userTools, profileTools, profileMetricTools)
-              .build();
+            .defaultSystem(loadPrompt(gymPrompt))
+            .defaultAdvisors(advisor -> advisor
+                  .param("conversationId", conversationId)
+                  .param("memoryAdvisor", memoryAdvisor))
+            .defaultTools(planTools, classTools, userClassTools,
+                  classSessionTools, classPlansTools, userTools, profileTools)
+            .build();
    }
 
 }

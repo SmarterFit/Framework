@@ -23,9 +23,11 @@ public class CSVMetricDataImporter implements MetricDataImporterHandler {
     public List<MetricDataDTO> parseFile(MultipartFile file) {
         List<MetricDataDTO> result = new ArrayList<>();
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));
-             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim())) {
-
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));
+                CSVParser csvParser = new CSVParser(reader,
+                        CSVFormat.DEFAULT.builder().setSkipHeaderRecord(true).setIgnoreHeaderCase(true).setTrim(false)
+                                .build())) {
             for (CSVRecord record : csvParser) {
                 // Converte cada linha CSV em um Map<String, Object>
                 Map<String, Object> dataMap = new HashMap<>();

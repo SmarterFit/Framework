@@ -1,7 +1,6 @@
 package com.framework.modules.challenge.dto.request.challengeDay;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.framework.modules.challenge.entity.ChallengeStep;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 

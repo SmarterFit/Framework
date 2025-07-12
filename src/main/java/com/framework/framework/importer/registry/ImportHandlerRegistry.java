@@ -11,14 +11,12 @@ import java.util.*;
 public class ImportHandlerRegistry {
 
     private final Map<String, MetricDataImporterHandler> activeImporters = new HashMap<>();
-    private final ImportProperties importProperties;
     private final List<MetricDataImporterHandler> handlers;
     private final Set<String> enabledMethods;
 
     public ImportHandlerRegistry(List<MetricDataImporterHandler> handlers,
                                  ImportProperties importProperties) {
         this.handlers = handlers;
-        this.importProperties = importProperties;
         this.enabledMethods = new HashSet<>(importProperties.getEnabledMethods());
     }
 

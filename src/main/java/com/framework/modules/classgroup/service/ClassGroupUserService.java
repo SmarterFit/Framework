@@ -1,7 +1,6 @@
 package com.framework.modules.classgroup.service;
 
 import com.framework.common.enums.SubscriptionTypeEvent;
-import com.framework.common.util.SensitiveDataDecryptor;
 import com.framework.modules.billing.entity.Subscription;
 import com.framework.modules.billing.event.SubscriptionEvent;
 import com.framework.modules.billing.validation.SubscriptionValidation;
@@ -28,17 +27,15 @@ public class ClassGroupUserService {
     private final ClassGroupUserRepository classGroupUserRepository;
     private final ApplicationEventPublisher publisher;
     private final SubscriptionValidation subscriptionValidation;
-    private final SensitiveDataDecryptor sensitiveDataDecryptor;
     private final ValidationFaced validationFaced;
 
     public ClassGroupUserService(ClassGroupUserRepository classGroupUserRepository,
             ValidationFaced validationFaced,
-            SubscriptionValidation subscriptionValidation, SensitiveDataDecryptor sensitiveDataDecryptor,
+            SubscriptionValidation subscriptionValidation,
             ApplicationEventPublisher publisher) {
         this.classGroupUserRepository = classGroupUserRepository;
         this.validationFaced = validationFaced;
         this.subscriptionValidation = subscriptionValidation;
-        this.sensitiveDataDecryptor = sensitiveDataDecryptor;
         this.publisher = publisher;
     }
 
@@ -96,10 +93,7 @@ public class ClassGroupUserService {
     public List<ClassUsersResponseDTO> getTeacherByClassGroupId(UUID classGroupId) {
         return classGroupUserRepository.findTeachersByClassGroupId(classGroupId).stream()
                 .map(ClassGroupUserMapper::toResponse).toList();
-
-
     }
-
 
     @Transactional(readOnly = true)
     public List<ClassGroupResponseDTO> getClassGroupsByUserId(UUID userId) {
@@ -110,7 +104,8 @@ public class ClassGroupUserService {
     @Transactional
     public void removeUserFromClassGroup(UUID classGroupId, UUID userId) {
         System.out.println("Removendo usuário: " + userId + " da turma: " + classGroupId);
-        ClassGroupUser classGroupUser = validationFaced.classGroupUserValidation.validateClassGroupUserId(userId, classGroupId);
+        ClassGroupUser classGroupUser = validationFaced.classGroupUserValidation.validateClassGroupUserId(userId,
+                classGroupId);
 
         decrementGroupMembers(classGroupUser.getClassGroup());
         publisher.publishEvent(new SubscriptionEvent(SubscriptionTypeEvent.INCREMENT_AVAILABLE_CLASSES,

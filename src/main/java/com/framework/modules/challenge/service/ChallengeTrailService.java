@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class ChallengeTrailService {
@@ -26,9 +25,9 @@ public class ChallengeTrailService {
     private final ChallengeQuestValidation challengeQuestValidation;
 
     public ChallengeTrailService(ChallengeTrailRepository repository,
-                                 ChallengeTrailValidation challengeTrailValidation,
-                                 ChallengeDayValidation challengeDayValidation,
-                                 ChallengeQuestValidation challengeQuestValidation) {
+            ChallengeTrailValidation challengeTrailValidation,
+            ChallengeDayValidation challengeDayValidation,
+            ChallengeQuestValidation challengeQuestValidation) {
         this.repository = repository;
         this.challengeTrailValidation = challengeTrailValidation;
         this.challengeDayValidation = challengeDayValidation;
@@ -39,7 +38,7 @@ public class ChallengeTrailService {
         ChallengeQuest quest = challengeQuestValidation.validateChallengeQuestById(request.getChallengeQuestId());
         List<ChallengeDay> days = new ArrayList<>();
 
-        if(request.getChallengeDayIds() != null) {
+        if (request.getChallengeDayIds() != null) {
             days = request.getChallengeDayIds().stream()
                     .map(challengeDayValidation::validateChallengeDay)
                     .toList();
@@ -50,12 +49,10 @@ public class ChallengeTrailService {
         return ChallengeTrailMapper.toResponseDTO(saved);
     }
 
-
     public void delete(UUID id) {
         challengeTrailValidation.validateChallengeTrailExists(id);
         repository.deleteById(id);
     }
-
 
     public ChallengeTrailResponseDTO findById(UUID id) {
         ChallengeTrail entity = repository.findById(id)
@@ -70,7 +67,7 @@ public class ChallengeTrailService {
     }
 
     public ChallengeTrailResponseDTO create(ChallengeTrail trail) {
-        ChallengeTrail savedTrail =  repository.save(trail);
+        ChallengeTrail savedTrail = repository.save(trail);
 
         return ChallengeTrailMapper.toResponseDTO(savedTrail);
     }

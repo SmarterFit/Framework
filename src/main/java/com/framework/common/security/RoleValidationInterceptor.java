@@ -6,6 +6,8 @@ import com.framework.modules.useraccess.validation.RolesValidation;
 import com.framework.modules.useraccess.validation.UserValidation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -17,14 +19,14 @@ public class RoleValidationInterceptor implements HandlerInterceptor {
 
     private final UserValidation userValidation;
 
-    public  RoleValidationInterceptor(UserValidation userValidation){
+    public RoleValidationInterceptor(UserValidation userValidation) {
         this.userValidation = userValidation;
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request,
-                             HttpServletResponse response,
-                             Object handler) throws Exception {
+    public boolean preHandle(@NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull Object handler) throws Exception {
 
         if (!(handler instanceof HandlerMethod handlerMethod)) {
             return true;

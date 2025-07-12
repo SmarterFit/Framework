@@ -1,6 +1,5 @@
 package com.framework.modules.classgroup.specification;
 
-
 import com.framework.modules.classgroup.dto.request.classgroup.SearchClassGroupRequestDTO;
 import com.framework.modules.classgroup.entity.ClassGroup;
 import jakarta.persistence.criteria.Predicate;
@@ -30,10 +29,12 @@ public class ClassSpecifications {
 
             // Filtro por modalidade (nome)
             if (dto.getModality() != null && !dto.getModality().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get("modality").get("name")), "%" + dto.getModality().toLowerCase() + "%"));
+                predicates.add(cb.like(cb.lower(root.get("modality").get("name")),
+                        "%" + dto.getModality().toLowerCase() + "%"));
             }
 
-            // Filtro por número mínimo/máximo de membros (precisa de join ou campo calculado)
+            // Filtro por número mínimo/máximo de membros (precisa de join ou campo
+            // calculado)
             if (dto.getMinTotalMembers() != null) {
                 predicates.add(cb.greaterThanOrEqualTo(root.get("totalMembers"), dto.getMinTotalMembers()));
             }
@@ -45,7 +46,9 @@ public class ClassSpecifications {
             if (dto.getDaysOfWeek() != null && !dto.getDaysOfWeek().isEmpty()) {
                 root.join("schedules").get("dayOfWeek"); // apenas para garantir o join
                 predicates.add(root.join("schedules").get("dayOfWeek").in(dto.getDaysOfWeek()));
-                query.distinct(true); // evitar duplicatas
+                if (query != null) {
+                    query.distinct(true);
+                }
             }
 
             // Filtro por data de início

@@ -30,6 +30,7 @@ public class ChallengeDay {
     private ChallengeTrail trail;
 
     @OneToMany(mappedBy = "day", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<ChallengeStep> steps = new ArrayList<>();
 
     @Column(name = "dt_created_at", nullable = false, updatable = false)

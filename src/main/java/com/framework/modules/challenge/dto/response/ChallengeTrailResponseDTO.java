@@ -1,6 +1,5 @@
 package com.framework.modules.challenge.dto.response;
 
-import com.framework.modules.challenge.dto.request.ChallengeQuestRequestDTO;
 import lombok.*;
 
 import java.util.List;
