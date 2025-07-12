@@ -7,7 +7,6 @@ payment:
   enabled-methods:
     - "PIX"
     - "CREDIT_CARD"
-    - "DEBIT_CARD"
 
 import:
     enabled-methods:
