@@ -35,7 +35,7 @@ public class ChallengeTypeService {
          String typeId = entry.getKey();
          ChallengeHandler handler = entry.getValue();
 
-         ChallengeType type = challengeTypeRepository.findByName(entry.getKey()).orElseGet(ChallengeType::new);
+         ChallengeType type = challengeTypeRepository.findById(entry.getKey()).orElseGet(ChallengeType::new);
          type.setId(typeId);
          type.setName(handler.getChallengeTypeName());
          type.setEnabled(true);

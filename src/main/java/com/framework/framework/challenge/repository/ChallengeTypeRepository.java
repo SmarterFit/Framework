@@ -22,6 +22,6 @@ public interface ChallengeTypeRepository extends JpaRepository<ChallengeType, St
 
     @Modifying
     @Transactional
-    @Query("UPDATE ChallengeType m SET m.enabled = false WHERE m.name NOT IN :activeIds")
+    @Query("UPDATE ChallengeType ct SET ct.enabled = false WHERE ct.id NOT IN :activeIds")
     void deactivateTypesNotIn(List<String> activeIds);
 }
