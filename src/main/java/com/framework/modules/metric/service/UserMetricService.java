@@ -34,11 +34,11 @@ public class UserMetricService {
     private final FileTypeValidator fileTypeValidator;
 
     public UserMetricService(UserMetricRepository userMetricRepository,
-                             UserMetricValidation importDataMetricValidation,
-                             MetricTypeValidation metricTypeValidation,
-                             ProfileValidation profileValidation,
-                             AbstractMetricValidation abstractMetricValidation,
-                             FileTypeValidator fileTypeValidator) {
+            UserMetricValidation importDataMetricValidation,
+            MetricTypeValidation metricTypeValidation,
+            ProfileValidation profileValidation,
+            AbstractMetricValidation abstractMetricValidation,
+            FileTypeValidator fileTypeValidator) {
         this.userMetricRepository = userMetricRepository;
         this.userMetricValidation = importDataMetricValidation;
         this.metricTypeValidation = metricTypeValidation;
@@ -47,7 +47,6 @@ public class UserMetricService {
         this.fileTypeValidator = fileTypeValidator;
 
     }
-
 
     @Transactional
     public ImportResultResponseDTO importMetrics(MultipartFile file, String type, UUID requesterId) {
@@ -76,33 +75,32 @@ public class UserMetricService {
                 .flatMap(result -> result.getAlerts().stream())
                 .toList();
 
-
         return ImportResultResponseDTO.builder()
                 .totalRecords(metrics.size())
                 .errorMessages(allAlerts)
                 .build();
     }
 
-
     @Transactional
     public List<MetricDataResponseDTO> getMetricsByProfileAndType(UUID profileId, UUID metricTypeId) {
         profileValidation.validateProfileByIdOrThrow(profileId);
         MetricType metricType = metricTypeValidation.findMetricById(metricTypeId);
         MetricHandler handler = userMetricValidation.getMetricHandler(metricType.getType());
-        List<AbstractMetricRecord> list = userMetricRepository.findByProfileIdAndMetricTypeId(profileId, metricType.getId());
+        List<AbstractMetricRecord> list = userMetricRepository.findByProfileIdAndMetricTypeId(profileId,
+                metricType.getId());
 
         return list.stream()
                 .map(handler::toResponseDTO)
                 .toList();
     }
 
-
     @Transactional
     public List<MetricDataResponseDTO> getMetricsByProfileAndTypeByName(UUID profileId, String metricTypeName) {
         profileValidation.validateProfileByIdOrThrow(profileId);
         MetricType metricType = metricTypeValidation.findMetricByType(metricTypeName);
         MetricHandler handler = userMetricValidation.getMetricHandler(metricType.getType());
-        List<AbstractMetricRecord> list = userMetricRepository.findByProfileIdAndMetricTypeId(profileId, metricType.getId());
+        List<AbstractMetricRecord> list = userMetricRepository.findByProfileIdAndMetricTypeId(profileId,
+                metricType.getId());
 
         return list.stream()
                 .map(handler::toResponseDTO)
@@ -142,7 +140,7 @@ public class UserMetricService {
     }
 
     public Optional<AbstractMetricRecord> getLastMetric(UUID userId, UUID metricTypeId) {
-        return userMetricRepository.findLastByProfileIdAndMetricTypeIdOrderByCreatedAtDesc(userId, metricTypeId);
+        return userMetricRepository.findTopByProfileIdAndMetricTypeIdOrderByCreatedAtDesc(userId, metricTypeId);
     }
 
     @Transactional
@@ -152,7 +150,7 @@ public class UserMetricService {
         MetricHandler handler = userMetricValidation.getMetricHandler(metricType.getType());
 
         List<AbstractMetricRecord> records = userMetricRepository
-                                                .findByProfileIdAndMetricTypeIdOrderByCreatedAtAsc(profileId, metricTypeId);
+                .findByProfileIdAndMetricTypeIdOrderByCreatedAtAsc(profileId, metricTypeId);
 
         return records.stream()
                 .map(handler::toResponseDTO)

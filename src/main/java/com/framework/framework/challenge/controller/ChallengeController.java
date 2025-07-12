@@ -21,7 +21,6 @@ public class ChallengeController {
         this.challengeService = challengeService;
     }
 
-
     @PostMapping
     public ResponseEntity<ChallengeTrailResponseDTO> generateChallenge(
             @RequestBody @Valid ChallengeGenericMetricRequestDTO challengeGenericQuestRequest,
