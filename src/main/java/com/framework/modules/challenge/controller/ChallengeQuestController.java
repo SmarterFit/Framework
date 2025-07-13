@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -32,6 +33,14 @@ public class ChallengeQuestController {
     @GetMapping("/{id}")
     public ResponseEntity<ChallengeQuestResponseDTO> getChallengeQuestById(@PathVariable UUID id) {
         return ResponseEntity.ok(challengeQuestService.getChallengeQuestById(id));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ChallengeQuestResponseDTO>> getAllChallengeQuestsByProfile(
+            @RequestHeader("X-User-Id") UUID profileId) {
+
+        List<ChallengeQuestResponseDTO> responseDTOs = challengeQuestService.getAllChallengeQuestsByProfile(profileId);
+        return ResponseEntity.ok(responseDTOs);
     }
 
     @PutMapping("/{id}")

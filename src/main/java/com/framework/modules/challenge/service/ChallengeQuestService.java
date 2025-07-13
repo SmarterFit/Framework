@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -60,6 +61,14 @@ public class ChallengeQuestService {
     public ChallengeQuestResponseDTO getChallengeQuestById(UUID id) {
         ChallengeQuest quest = challengeQuestValidation.validateChallengeQuestById(id);
         return ChallengeQuestMapper.toResponse(quest);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ChallengeQuestResponseDTO> getAllChallengeQuestsByProfile(UUID profileId) {
+        List<ChallengeQuest> quests = challengeQuestRepository.findAllByProfileId(profileId);
+        return quests.stream()
+                .map(ChallengeQuestMapper::toResponse)
+                .toList();
     }
 
     @Transactional

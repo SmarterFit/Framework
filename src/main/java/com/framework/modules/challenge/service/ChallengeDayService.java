@@ -27,9 +27,9 @@ public class ChallengeDayService {
     private final ChallengeTrailValidation challengeTrailValidation;
 
     public ChallengeDayService(ChallengeDayRepository repository,
-                               ChallengeDayValidation challengeDayValidation,
-                               ChallengeStepValidation challengeStepValidation,
-                               ChallengeTrailValidation challengeTrailValidation) {
+            ChallengeDayValidation challengeDayValidation,
+            ChallengeStepValidation challengeStepValidation,
+            ChallengeTrailValidation challengeTrailValidation) {
         this.repository = repository;
         this.challengeDayValidation = challengeDayValidation;
         this.challengeStepValidation = challengeStepValidation;
@@ -41,7 +41,7 @@ public class ChallengeDayService {
         ChallengeTrail trail = challengeTrailValidation.validateChallengerTail(request.getTrailId());
         List<ChallengeStep> steps = new ArrayList<>();
 
-        if(request.getSteps() != null) {
+        if (request.getSteps() != null) {
             steps = request.getSteps().stream()
                     .map(challengeStepValidation::validateChallengeStep)
                     .collect(Collectors.toList());
@@ -55,7 +55,10 @@ public class ChallengeDayService {
     public ChallengeDayResponseDTO update(UUID id, ChallengeDayRequestUpdateDTO request) {
         ChallengeDay day = challengeDayValidation.validateChallengeDay(id);
         challengeDayValidation.alreadyExistChallengeDay(request.getDate());
+
         day = ChallengeDayMapper.toEntity(request, day);
+        day = repository.save(day);
+
         return ChallengeDayMapper.toResponseDTO(day);
 
     }
