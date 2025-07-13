@@ -24,8 +24,7 @@ public class GenericMetricHandler extends AbstractMetricHandler {
     protected MetricValidationContext validate(MetricDataDTO request, MetricType metricType) {
         MetricValidationChain chain = new MetricValidationChain(Arrays.asList(
                 new RequiredFieldValidation("value"),
-                new NumericRangeValidation("value")
-        ));
+                new NumericRangeValidation("value")));
 
         return chain.execute(request, metricType);
     }
@@ -51,18 +50,16 @@ public class GenericMetricHandler extends AbstractMetricHandler {
 
     @Override
     public MetricDataResponseDTO toResponseDTO(AbstractMetricRecord record) {
-        GenericMetricRecord genericRecord= (GenericMetricRecord) record;
+        GenericMetricRecord genericRecord = (GenericMetricRecord) record;
 
         Map<String, Object> data = Map.of(
-                "Valor", genericRecord.getValue()
-        );
+                "value", genericRecord.getValue());
 
         return new MetricDataResponseDTO(
                 genericRecord.getId(),
                 genericRecord.getMetricType().getType(),
                 data,
                 record.getCreatedAt()
-
         );
     }
 
@@ -75,6 +72,5 @@ public class GenericMetricHandler extends AbstractMetricHandler {
     public String getSupportedType() {
         return "GENERIC_TYPE";
     }
-
 
 }
