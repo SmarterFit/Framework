@@ -1,11 +1,11 @@
 package com.framework.modules.metric.service;
 
+import com.framework.framework.usermetric.dto.MetricProcessResult;
 import com.framework.framework.usermetric.entity.generic.AbstractMetricRecord;
 import com.framework.framework.usermetric.entity.generic.MetricType;
 import com.framework.framework.importer.handler.MetricDataImporterHandler;
 import com.framework.framework.usermetric.handler.MetricHandler;
 import com.framework.framework.usermetric.validation.AbstractMetricValidation;
-import com.framework.framework.usermetric.entity.MetricProcessResult;
 import com.framework.framework.importer.validation.FileTypeValidator;
 import com.framework.modules.metric.dto.request.MetricDataDTO;
 import com.framework.modules.metric.dto.request.MetricDataRequestDTO;

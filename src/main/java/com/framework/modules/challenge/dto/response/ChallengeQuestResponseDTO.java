@@ -2,7 +2,8 @@ package com.framework.modules.challenge.dto.response;
 
 import com.framework.common.enums.ExperienceLevel;
 import com.framework.framework.challenge.dto.response.ChallengeTypeResponseDTO;
-import com.framework.framework.usermetric.entity.MetricTypeResponseDTO;
+import com.framework.framework.usermetric.dto.MetricTypeResponseDTO;
+
 import lombok.*;
 
 import java.time.DayOfWeek;

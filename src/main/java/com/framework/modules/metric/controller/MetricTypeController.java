@@ -35,6 +35,12 @@ public class MetricTypeController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/nome/{name}")
+    public ResponseEntity<MetricTypeResponseDTO> getMetricTypeByName(@PathVariable String name) {
+        MetricTypeResponseDTO response = metricTypeService.getMetricTypeByName(name);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping()
     public ResponseEntity<List<MetricTypeResponseDTO>> getAllMetricType() {
         List<MetricTypeResponseDTO> list = metricTypeService.getAllMetricsType();

@@ -5,9 +5,7 @@ import com.framework.modules.billing.dto.request.payment.ProcessorPaymentRequest
 import com.framework.modules.billing.dto.response.payment.PaymentProcessorResponseDTO;
 
 public interface PaymentHandler {
-
     public PaymentProcessorResponseDTO processPayment(ProcessorPaymentRequestDTO processorDTO);
-
     public String getPaymentMethodId();
     public String getPaymentMethodName();
 }
