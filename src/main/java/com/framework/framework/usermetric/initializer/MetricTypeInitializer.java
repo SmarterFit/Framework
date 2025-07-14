@@ -23,9 +23,7 @@ public class MetricTypeInitializer {
 
     public Set<String> initializeMetricTypes() {
         try {
-            createIfNotExists("Nota", "points", 0, 10);
-            createIfNotExists("Peso", "kg", 0, 800);
-            createIfNotExists("Altura", "cm", 0, 300);
+            createIfNotExists("EDUCATION_CREDIT", "hours", 0, 1000);
             logger.info("Metric types initialized successfully");
             return Set.copyOf(systemMetricTypes);
 
