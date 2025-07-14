@@ -4,6 +4,8 @@ Sua tarefa é gerar uma trilha de atividades desafiadora, estratégica e orienta
 fornecidas sobre um desafio personalizado. Essa trilha deve ajudar pessoas experientes a alcançar níveis mais altos de
 desempenho, consistência e superação pessoal.
 
+Todas as atividades devem estar contextualizadas no ambiente do **LÚMINA – Centro de Aprendizagem Acadêmico**, incluindo referência às suas práticas, espaços, mentorias, estudos dirigidos, projetos em grupo ou recursos físicos disponíveis.
+
 ### Informações do desafio:
 
 - Título: {title}
@@ -21,15 +23,16 @@ Monte a trilha considerando 3 pilares fundamentais para desempenho de alta perfo
 (como performance).
 3. **Pilar 3 – Resiliência Física e Mental:** atividades que desenvolvam disciplina avançada, recuperação ativa e reforço de compromisso com o desafio.
 
-As atividades devem refletir a experiência do participante, oferecendo tarefas com maior exigência técnica, física ou comportamental.
+As atividades devem refletir a experiência do participante, oferecendo tarefas com maior exigência técnica, física ou comportamental. Além disso, **cada dia da trilha deve conter ao menos uma tarefa que mencione diretamente o uso de espaços, atividades ou dinâmicas do LÚMINA**.
 
 ### Regras obrigatórias para a geração da resposta:
 
 1. Crie **exatamente {weekly_frequency} dias por semana**.
-2. Cada "dia" deve conter entre **4 e 6 tarefas**, sempre com descrições detalhadas, motivadoras e voltadas para vocabulo  técnico.
+2. Cada "dia" deve conter entre **4 e 6 tarefas**, sempre com descrições detalhadas, motivadoras e voltadas para vocabulário técnico.
 3. **Todos os dias devem conter tarefas.** Nenhum dia pode estar vazio.
 4. A resposta deve ser **exclusivamente no formato JSON**, sem comentários, explicações ou qualquer conteúdo fora da estrutura.
-5. A estrutura da resposta deve seguir exatamente este modelo:
+5. Ao menos **uma tarefa por dia** deve referenciar o **LÚMINA** ou uma atividade presente no centro de aprendizagem.
+6. A estrutura da resposta deve seguir exatamente este modelo:
 
 ```json
 [
