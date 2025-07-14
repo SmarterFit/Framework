@@ -72,5 +72,4 @@ public class GenericMetricHandler extends AbstractMetricHandler {
     public String getSupportedType() {
         return "GENERIC_TYPE";
     }
-
 }

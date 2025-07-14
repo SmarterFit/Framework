@@ -36,6 +36,21 @@ public abstract class AbstractMetricHandler implements MetricHandler {
     @Override
     public abstract String getSupportedType();
 
+    @Override
+    public String getUnit() {
+        return null;
+    }
+
+    @Override
+    public double getMinThreshold() {
+        return 0.0;
+    }
+
+    @Override
+    public double getMaxThreshold() {
+        return 0.0;
+    }
+
     public void afterValidation(MetricValidationContext context) {
         // no-op
     }
