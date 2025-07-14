@@ -96,5 +96,11 @@ public class EducationCreditHandler extends AbstractMetricHandler {
     public String getSupportedType() {
         return "EDUCATION_CREDIT";
     }
+
+    @Override
+    public boolean supports(String metricType) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'supports'");
+    }
 }
 
