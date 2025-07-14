@@ -8,6 +8,9 @@ payment:
     - "PIX"
     - "CREDIT_CARD"
     - "DEBIT_CARD"
+    - "BOLETO"
+    - "CORPORATE"
+    - "ANNUITY"
 
 import:
     enabled-methods:
