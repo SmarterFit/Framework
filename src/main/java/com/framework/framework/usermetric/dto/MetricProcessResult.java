@@ -1,4 +1,4 @@
-package com.framework.framework.usermetric.entity;
+package com.framework.framework.usermetric.dto;
 
 import com.framework.framework.usermetric.entity.generic.AbstractMetricRecord;
 import com.framework.modules.metric.dto.response.MetricDataResponseDTO;

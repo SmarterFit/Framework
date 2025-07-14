@@ -2,6 +2,7 @@ package com.framework.framework.usermetric.registry;
 
 import com.framework.framework.usermetric.handler.MetricHandler;
 import com.framework.framework.usermetric.initializer.MetricTypeInitializer;
+
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

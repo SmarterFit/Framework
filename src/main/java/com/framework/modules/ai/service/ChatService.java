@@ -17,28 +17,29 @@ public class ChatService {
    public ChatService(@Qualifier("gymChatClient") ChatClient chatClient) {
       this.chatClient = chatClient;
    }
-//
-//   public Flux<String> askGroq(String userInput, UUID requesterId) {
-//      return chatClient.prompt()
-//            .user(userInput)
-//              .advisors(a -> {
-//                 a.param("userId", requesterId.toString());
-//              })
-//            .stream()
-//            .content();
-//   }
+   //
+   // public Flux<String> askGroq(String userInput, UUID requesterId) {
+   // return chatClient.prompt()
+   // .user(userInput)
+   // .advisors(a -> {
+   // a.param("userId", requesterId.toString());
+   // })
+   // .stream()
+   // .content();
+   // }
 
-    public Flux<String> askGroq(String userInput, UUID requesterId) {
-        String userContext = String.format("""
-        O usuário que está interagindo tem o ID: %s.
-        Use este ID apenas se a pergunta estiver relacionada a dados pessoais dele.
-        Caso contrário, ignore essa informação.
-        """, requesterId);
+   public Flux<String> askGroq(String userInput, UUID requesterId) {
+      String userContext = String.format("""
+             \n\n
+            CHAMADA DE CONTEXTO:
+            O usuário que está interagindo tem o ID: %s.
+            Use este ID apenas se a pergunta estiver relacionada a dados pessoais dele.
+            Caso contrário, ignore essa informação.
+            """, requesterId);
 
-        return chatClient.prompt()
-                .system(userContext.concat(userContext))
-                .user(userInput)
-                .stream()
-                .content();
-    }
+      return chatClient.prompt()
+            .user(userInput.concat(userContext))
+            .stream()
+            .content();
+   }
 }

@@ -1,9 +1,9 @@
 package com.framework.framework.usermetric.handler;
 
 
+import com.framework.framework.usermetric.dto.MetricProcessResult;
 import com.framework.framework.usermetric.entity.generic.AbstractMetricRecord;
 import com.framework.framework.usermetric.entity.generic.MetricType;
-import com.framework.framework.usermetric.entity.MetricProcessResult;
 import com.framework.modules.metric.dto.request.MetricDataDTO;
 import com.framework.modules.metric.dto.response.MetricDataResponseDTO;
 import com.framework.modules.useraccess.entity.Profile;
