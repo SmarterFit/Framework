@@ -35,4 +35,9 @@ public class ChallengeTrailController {
     public ResponseEntity<ChallengeTrailResponseDTO> findById(@PathVariable UUID id) {
         return ResponseEntity.ok(service.findById(id));
     }
+
+    @GetMapping("/quest/{questId}")
+    public ResponseEntity<ChallengeTrailResponseDTO> getByQuestId(@PathVariable UUID questId) {
+        return ResponseEntity.ok(service.getByQuestId(questId));
+    }
 }

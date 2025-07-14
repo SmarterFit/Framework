@@ -27,8 +27,13 @@ public class ChallengeStepController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ChallengeStepResponseDTO> update(@PathVariable UUID id,
-                                                           @RequestBody ChallengeStepRequestDTO request) {
+            @RequestBody ChallengeStepRequestDTO request) {
         return ResponseEntity.ok(challengeStepService.update(id, request));
+    }
+
+    @PatchMapping("/toggle/{id}")
+    public ResponseEntity<ChallengeStepResponseDTO> toggle(@PathVariable UUID id) {
+        return ResponseEntity.ok(challengeStepService.toggle(id));
     }
 
     @DeleteMapping("/{id}")

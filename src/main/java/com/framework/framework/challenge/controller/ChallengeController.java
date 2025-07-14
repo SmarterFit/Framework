@@ -29,5 +29,4 @@ public class ChallengeController {
         ChallengeTrailResponseDTO response = challengeService.generateChallenge(requesterId, challengeGenericQuestRequest);
         return ResponseEntity.status(201).body(response);
     }
-
 }
