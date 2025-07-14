@@ -23,7 +23,6 @@ public class ClassGradeMetricRecord extends GradeMetricRecord {
             "grade", this.grade,
             "classGroupId", this.classGroup.getId(),
             "classGroupName", this.classGroup.getTitle()
-
       );
    }
 }

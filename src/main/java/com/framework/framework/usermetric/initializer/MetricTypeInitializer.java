@@ -22,6 +22,7 @@ public class MetricTypeInitializer {
 
     public Set<String> initializeMetricTypes() {
         try {
+            createIfNotExists("Nota", "pontos", 0, 10);
             logger.info("Metric types initialized successfully");
             return Set.copyOf(systemMetricTypes);
 
