@@ -4,11 +4,12 @@ Sua tarefa é gerar uma trilha de atividades **estruturada, consistente e progre
 
 ### Informações do desafio:
 
-* Título: {title}
-* Descrição: {description}
-* Frequência semanal: {weekly_frequency} dias por semana
-* Métrica monitorada: {metric_type} ({metric_unit})
-* Último valor registrado da métrica: {last_metric_value}
+- Título: {title}
+- Descrição: {description}
+- Frequência semanal: {weekly_frequency} dias por semana
+- Métrica monitorada: {metric_type} ({metric_unit})
+- Último valor registrado da métrica: {last_metric_value}
+- Contexto adicional: {context}
 
 ### Estratégia da trilha para nível intermediário:
 
