@@ -13,6 +13,7 @@ import com.framework.modules.classgroup.validation.ClassGroupValidation;
 import com.framework.modules.metric.dto.request.MetricDataDTO;
 import com.framework.modules.metric.dto.response.MetricDataResponseDTO;
 import com.framework.modules.useraccess.entity.Profile;
+import com.framework.modules.useraccess.validation.ProfileValidation;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -24,10 +25,13 @@ public class GradeMetricHandler extends AbstractMetricHandler {
 
    public List<String> alerts;
    private final ClassGroupValidation classGroupValidation;
+   private final ProfileValidation profileValidation;
    private final ApplicationEventPublisher publisher;
 
-   public GradeMetricHandler(ClassGroupValidation classGroupValidation, ApplicationEventPublisher publisher) {
+   public GradeMetricHandler(ClassGroupValidation classGroupValidation, ProfileValidation profileValidation,
+         ApplicationEventPublisher publisher) {
       this.classGroupValidation = classGroupValidation;
+      this.profileValidation = profileValidation;
       this.publisher = publisher;
    }
 
@@ -38,7 +42,8 @@ public class GradeMetricHandler extends AbstractMetricHandler {
             new RequiredFieldValidation("classGroupId"),
             new RequiredFieldValidation("userId"),
             new NumericRangeValidation("grade"),
-            new ClassGroupIdValidation("classGroupId", classGroupValidation)));
+            new ClassGroupIdValidation("classGroupId", classGroupValidation),
+            new ProfileIdValidation("userId", profileValidation)));
 
       return chain.execute(request, metricType);
    }
@@ -63,13 +68,14 @@ public class GradeMetricHandler extends AbstractMetricHandler {
 
       double grade = context.getNormalized("grade", Double.class);
       ClassGroup classGroup = context.getNormalized("classGroup", ClassGroup.class);
+      Profile profileToAdd = context.getNormalized("profile", Profile.class);
 
       record.setGrade(grade);
       record.setClassGroup(classGroup);
 
       record.setMetricType(context.getMetricType());
       record.setSource(source);
-      record.setProfile(profile);
+      record.setProfile(profileToAdd);
 
       return record;
    }
@@ -103,11 +109,12 @@ public class GradeMetricHandler extends AbstractMetricHandler {
 
    @Override
    public void afterValidation(MetricValidationContext context) {
-      UUID userId = context.getNormalized("userId", UUID.class);
+      String userIdStr = (String) context.getOriginalRequest().getData().get("userId");
+      UUID userId = UUID.fromString(userIdStr);
       Double grade = context.getNormalized("grade", Double.class);
 
       GamificationEventRequestDTO dto = GamificationEventRequestDTO.builder()
-            .eventType("login")
+            .eventType("grades")
             .userId(userId)
             .details(Map.of("grade", grade))
             .build();
