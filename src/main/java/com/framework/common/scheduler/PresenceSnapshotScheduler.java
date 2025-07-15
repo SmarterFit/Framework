@@ -13,7 +13,7 @@ public class PresenceSnapshotScheduler {
       this.presenceSnapshotService = presenceSnapshotService;
    }
 
-   @Scheduled(cron = "0 */5 6-21 * * 2-7")
+   @Scheduled(cron = "0 */5 6-21 * * 1-6")
    public void registerPresence() {
       presenceSnapshotService.registerPresence();
    }
