@@ -42,5 +42,6 @@ public interface GymCheckInRepository extends JpaRepository<GymCheckIn, UUID> {
                         @Param("startDate") LocalDateTime startDate,
                         @Param("endDate") LocalDateTime endDate);
 
+        @Query("SELECT COUNT(g) FROM GymCheckIn g WHERE g.checkOutTime IS NULL")
         Integer countByCheckOutTimeIsNull();
 }
