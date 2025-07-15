@@ -39,8 +39,8 @@ public class GradeChallengeTrailHandler extends ChallengeHandler {
             new RequiredFieldValidation("classGroupId"),
             new ClassGroupIdValidation("classGroupId", classGroupValidation)));
 
-      MetricValidationContext context = chain.execute(metricDataDTO, metricType);
-      UUID classGroupId = context.getNormalized("classGroupId", UUID.class);
+      metricValidationContext = chain.execute(metricDataDTO, metricType);
+      UUID classGroupId = metricValidationContext.getNormalized("classGroupId", UUID.class);
 
       ClassGradeMetricRecord record = classGradeMetricRecordRepository
             .findFirstByProfileIdAndMetricTypeIdAndClassGroupIdOrderByCreatedAtDesc(userId, metricType.getId(),
@@ -53,6 +53,14 @@ public class GradeChallengeTrailHandler extends ChallengeHandler {
                return emptyRecord;
             });
       return String.valueOf(record.getGrade());
+   }
+
+   @Override
+   public String getAdditionalContext() {
+      ClassGroup classGroup = metricValidationContext.getNormalized("classGroup", ClassGroup.class);
+      String title = classGroup.getTitle();
+      String modality = classGroup.getModality().getName();
+      return "O desafio de nota envolve as notas da turma " + title + " da disciplina de " + modality + ".";
    }
 
    @Override

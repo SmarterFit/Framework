@@ -14,6 +14,7 @@ Todas as atividades devem estar inseridas no contexto da aplicação **LÚMINA �
 - Frequência semanal: {weekly_frequency} dias por semana
 - Métrica monitorada: {metric_type} ({metric_unit})
 - Último valor registrado da métrica: {last_metric_value}
+- Contexto adicional: {context}
 
 ### Estratégia da trilha para nível intermediário:
 

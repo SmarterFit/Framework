@@ -13,6 +13,7 @@ Todas as atividades devem estar contextualizadas no ambiente do **LÚMINA – Ce
 - Frequência semanal: {weekly_frequency} dias por semana  
 - Métrica monitorada: {metric_type} ({metric_unit})  
 - Último valor registrado da métrica: {last_metric_value}
+- Contexto adicional: {context}
 
 ---
 
