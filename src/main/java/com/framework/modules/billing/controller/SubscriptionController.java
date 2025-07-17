@@ -28,7 +28,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/assinaturas")
-@CrossOrigin
+@CrossOrigin("*")
 public class SubscriptionController {
    private final SubscriptionService subscriptionService;
 

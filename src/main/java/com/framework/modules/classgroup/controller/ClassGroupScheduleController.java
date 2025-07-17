@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@CrossOrigin
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/turma/horarios")
 public class ClassGroupScheduleController {
@@ -34,14 +34,11 @@ public class ClassGroupScheduleController {
         return ResponseEntity.status(201).body(responseDTO);
     }
 
-
-
     @GetMapping("/{id}")
     public ResponseEntity<List<ClassGroupScheduleResponseDTO>> getAllClassGroupSchedulesById(@PathVariable UUID id) {
         List<ClassGroupScheduleResponseDTO> responseDTO = classGroupScheduleService.getAllClassGroupSchedulesById(id);
         return ResponseEntity.ok(responseDTO);
     }
-
 
     @RequireRole(RoleType.EMPLOYEE)
     @PutMapping("alterar/{id}")

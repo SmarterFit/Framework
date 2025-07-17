@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@CrossOrigin
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/turma")
 public class ClassGroupPlanController {
@@ -22,10 +22,9 @@ public class ClassGroupPlanController {
         this.classGroupPlanService = classGroupPlanService;
     }
 
-
     @RequireRole(RoleType.ADMIN)
     @PostMapping("/planos/cadastrar")
-    public ResponseEntity<Void> addPlanToClassGroup(@RequestBody @Valid CreateClassGroupPlanDTO  requestDTO) {
+    public ResponseEntity<Void> addPlanToClassGroup(@RequestBody @Valid CreateClassGroupPlanDTO requestDTO) {
         classGroupPlanService.addPlanToClassGroup(requestDTO);
         return ResponseEntity.status(201).build();
     }

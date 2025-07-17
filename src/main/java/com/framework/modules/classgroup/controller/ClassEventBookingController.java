@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@CrossOrigin
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/eventos")
 public class ClassEventBookingController {
@@ -41,7 +41,6 @@ public class ClassEventBookingController {
             @RequestBody @Valid UpdateClassEventBookingRequestDTO requestDTO) {
         return ResponseEntity.ok(classEventBookingService.updateClassEventBookingById(requestDTO));
     }
-
 
     @GetMapping("/reservas/{classEventId}/usuarios")
     public ResponseEntity<List<ClassEventBookingResponseDTO>> getClassEventBookingsByClassEventId(

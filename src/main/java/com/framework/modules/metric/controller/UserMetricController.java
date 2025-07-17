@@ -13,7 +13,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
-@CrossOrigin
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/metrica")
 public class UserMetricController {

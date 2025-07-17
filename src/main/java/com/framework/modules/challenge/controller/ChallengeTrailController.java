@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("desafio/trilha")
-@CrossOrigin
+@CrossOrigin("*")
 public class ChallengeTrailController {
 
     private final ChallengeTrailService service;

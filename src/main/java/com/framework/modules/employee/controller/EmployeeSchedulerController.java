@@ -12,11 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@CrossOrigin
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/funcionarios/horarios")
 public class EmployeeSchedulerController {
-
 
     private final EmployeeSchedulerService employeeSchedulerService;
 
@@ -26,7 +25,8 @@ public class EmployeeSchedulerController {
 
     @RequireRole(RoleType.ADMIN)
     @PostMapping("/cadastrar")
-    public ResponseEntity<EmployeeScheduleResponseDTO> create(@RequestBody @Valid EmployeeSchedulerRequestDTO requestDTO) {
+    public ResponseEntity<EmployeeScheduleResponseDTO> create(
+            @RequestBody @Valid EmployeeSchedulerRequestDTO requestDTO) {
         EmployeeScheduleResponseDTO response = employeeSchedulerService.createEmployeeSchedule(requestDTO);
         return ResponseEntity.status(201).body(response);
     }
@@ -40,7 +40,7 @@ public class EmployeeSchedulerController {
     @RequireRole(RoleType.ADMIN)
     @PutMapping("/{id}")
     public ResponseEntity<EmployeeScheduleResponseDTO> update(@PathVariable UUID id,
-                                                              @RequestBody @Valid EmployeeSchedulerRequestDTO requestDTO) {
+            @RequestBody @Valid EmployeeSchedulerRequestDTO requestDTO) {
         EmployeeScheduleResponseDTO updated = employeeSchedulerService.updateEmployeeScheduleById(id, requestDTO);
         return ResponseEntity.ok(updated);
     }
