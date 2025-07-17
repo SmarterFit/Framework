@@ -29,20 +29,21 @@ public class EducationCreditChallengeTrailHandler extends ChallengeHandler {
    @Override
    protected String fetchUserMetric(MetricType metricType, UUID userId, MetricDataDTO metricDataDTO) {
       MetricValidationChain chain = new MetricValidationChain(
-            Arrays.asList(new RequiredFieldValidation("institution")));
+            Arrays.asList(new RequiredFieldValidation("keyword")));
 
       metricValidationContext = chain.execute(metricDataDTO, metricType);
-      String institution = metricValidationContext.getNormalized(getAdditionalContext(), String.class);
+      String keyword = metricValidationContext.getNormalized(getAdditionalContext(), String.class);
 
-      double hours = educationCreditRecordRepository.sumHoursByProfileIdAndInstitution(userId, institution);
+      double hours = educationCreditRecordRepository.sumHoursByProfileIdAndKeyword(userId, keyword);
       return String.valueOf(hours);
    }
 
    @Override
    public String getAdditionalContext() {
-      String institution = metricValidationContext.getNormalized("institution", String.class);
-      return "O desafio de nota envolve a instituição: " + institution
-            + " onde o número de horas fornecido é a soma total de horas de educação do usuário nessa instituição.";
+      String keyword = metricValidationContext.getNormalized("keyword", String.class);
+      return "O desafio de nota envolve a palavra chave '" + keyword + "': "
+            + " onde o número de horas fornecido é a soma total de horas de"
+            + " educação desse usuário que contenham essa palavra.";
    }
 
    @Override

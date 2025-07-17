@@ -56,9 +56,10 @@ public class EducationCreditHandler extends AbstractMetricHandler {
     public AbstractMetricRecord build(MetricValidationContext context, Profile profile, String source) {
         EducationCreditRecord record = new EducationCreditRecord();
         double hours = context.getNormalized("hours", Double.class);
-        String courseName = context.getNormalized("courseName", String.class);
-        String institution = context.getNormalized("institution", String.class);
-        LocalDate completionDate = context.getNormalized("completionDate", LocalDate.class);
+        MetricDataDTO request = context.getOriginalRequest();
+        String courseName = request.getData().get("courseName").toString();
+        String institution = request.getData().get("institution").toString();
+        LocalDate completionDate = LocalDate.parse(request.getData().get("completionDate").toString());
 
         record.setCourseName(courseName);
         record.setCompletionDate(completionDate);
@@ -85,7 +86,7 @@ public class EducationCreditHandler extends AbstractMetricHandler {
 
     @Override
     public String getSupportedType() {
-        return "EDUCATION_CREDIT";
+        return "Créditos de Educação";
     }
 
     @Override

@@ -26,17 +26,27 @@ public class GroupPointsPaymentHandler implements PaymentHandler {
     @Transactional
     public PaymentProcessorResponseDTO processPayment(ProcessorPaymentRequestDTO processorDTO) {
         Map<String, Object> data = processorDTO.getData();
-        if (!data.containsKey("userId") ||
-                data.get("userId") == null ||
-                !(data.get("userId") instanceof UUID)) {
-            return new PaymentProcessorResponseDTO("Invalid User Id.", false);
-        } else if (!data.containsKey("amount")
+        if (!data.containsKey("userId") || data.get("userId") == null) {
+            return new PaymentProcessorResponseDTO("User Id is required.", false);
+        }
+
+        if (data.get("userId") instanceof String) {
+            try {
+                UUID.fromString((String) data.get("userId"));
+            } catch (IllegalArgumentException e) {
+                return new PaymentProcessorResponseDTO("Invalid User Id format.", false);
+            }
+        } else {
+            return new PaymentProcessorResponseDTO("Invalid User Id type.", false);
+        }
+
+        if (!data.containsKey("amount")
                 || data.get("amount") == null
                 || !(data.get("amount") instanceof Number)) {
             return new PaymentProcessorResponseDTO("Invalid Amount.", false);
         }
 
-        UUID userId = (UUID) data.get("userId");
+        UUID userId = UUID.fromString((String) data.get("userId"));
         Double amount = ((Number) data.get("amount")).doubleValue();
         int amountWithDiscount = (int) Math.round(amount * 0.9);
 

@@ -27,8 +27,8 @@ public class EducationCreditsEventHandler extends GamificationEventHandler {
       } else if (!(hours instanceof Double)) {
          this.message = "hours must be a double";
          return false;
-      } else if ((Double) hours < 0 || (Double) hours > 10) {
-         this.message = "grade must be between 0 and 10";
+      } else if ((Double) hours < 0 || (Double) hours > 1000) {
+         this.message = "hours must be between 0 and 10";
          return false;
       }
 
