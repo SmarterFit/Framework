@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/perfis")
-@CrossOrigin
+@CrossOrigin("*")
 public class ProfileController {
 
     private final ProfileService profileService;

@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/enderecos")
-@CrossOrigin
+@CrossOrigin("*")
 public class AddressController {
     private final AddressService addressService;
 
