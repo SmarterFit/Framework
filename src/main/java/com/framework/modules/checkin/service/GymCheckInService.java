@@ -36,7 +36,7 @@ public class GymCheckInService {
     private final SensitiveCheckInDataDecryptor sensitiveCheckInDataDecryptor;
     private final ApplicationEventPublisher publisher;
 
-    private static final int STREAK_DAYS_RANGE = 7; 
+    private static final int STREAK_DAYS_RANGE = 7;
 
     public GymCheckInService(GymCheckInRepository gymCheckInRepository, GymCheckInValidation gymCheckInValidation,
             UserValidation userValidation, SubscriptionValidation subscriptionValidation,
@@ -59,10 +59,10 @@ public class GymCheckInService {
         subscriptionValidation.validateHasCurrentSubscription(userId);
         gymCheckInValidation.validateOpenCheckInNotExists(userId);
 
+        sendGymCheckInEvents(user);
+
         GymCheckIn gymCheckIn = GymCheckInMapper.toEntity(requestDTO, user);
         gymCheckIn = gymCheckInRepository.save(gymCheckIn);
-
-        sendGymCheckInEvents(user);
 
         return sensitiveCheckInDataDecryptor.decrypt(
                 GymCheckInMapper.toResponse(gymCheckIn));
