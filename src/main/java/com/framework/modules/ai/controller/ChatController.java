@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/chat")
-@CrossOrigin
+@CrossOrigin("*")
 public class ChatController {
    private final ChatService chatService;
    private final WorkoutPlanAIGenerator workoutPlanAIGenerator;

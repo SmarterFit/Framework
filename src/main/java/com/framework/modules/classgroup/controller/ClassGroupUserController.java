@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@CrossOrigin
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/turma")
 public class ClassGroupUserController {
@@ -28,7 +28,7 @@ public class ClassGroupUserController {
     @RequireRole(RoleType.EMPLOYEE)
     @PostMapping("/professor/cadastrar")
     public ResponseEntity<Void> addEmployeeToClassGroup(@RequestBody @Valid EmployeeClassGroupUserDTO requestDTO,
-                                                        @RequestHeader("X-User-Id") UUID requesterId) {
+            @RequestHeader("X-User-Id") UUID requesterId) {
         classGroupUserService.addEmployeeToClassGroup(requestDTO, requesterId);
         return ResponseEntity.status(201).build();
     }
@@ -38,7 +38,6 @@ public class ClassGroupUserController {
         classGroupUserService.addMemberToClassGroup(requestDTO);
         return ResponseEntity.ok().build();
     }
-
 
     @GetMapping("/{classGroupId}/alunos")
     public ResponseEntity<List<ClassUsersResponseDTO>> getStudentsByClassGroupId(@PathVariable UUID classGroupId) {

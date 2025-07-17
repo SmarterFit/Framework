@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/modalidade")
-@CrossOrigin
+@CrossOrigin("*")
 public class ModalityController {
 
     public final ModalityService modalityService;
@@ -23,7 +23,6 @@ public class ModalityController {
     public ModalityController(ModalityService modalityService) {
         this.modalityService = modalityService;
     }
-
 
     @RequireRole(RoleType.ADMIN)
     @PostMapping("/cadastrar")
