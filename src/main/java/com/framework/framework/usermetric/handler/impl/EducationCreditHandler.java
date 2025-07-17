@@ -1,10 +1,10 @@
 package com.framework.framework.usermetric.handler.impl;
 
-import com.framework.framework.usermetric.dto.EducationCreditDTO;
+import com.framework.framework.gamification.dto.request.GamificationEventRequestDTO;
+import com.framework.framework.gamification.event.GamificationEvent;
 import com.framework.framework.usermetric.entity.educationcredit.EducationCreditRecord;
 import com.framework.framework.usermetric.entity.generic.AbstractMetricRecord;
 import com.framework.framework.usermetric.entity.generic.MetricType;
-import com.framework.framework.usermetric.entity.MetricProcessResult;
 import com.framework.framework.usermetric.handler.AbstractMetricHandler;
 import com.framework.framework.usermetric.validation.MetricValidationContext;
 import com.framework.framework.usermetric.validation.chain.MetricValidationChain;
@@ -12,9 +12,9 @@ import com.framework.framework.usermetric.validation.chain.NumericRangeValidatio
 import com.framework.framework.usermetric.validation.chain.RequiredFieldValidation;
 import com.framework.modules.metric.dto.request.MetricDataDTO;
 import com.framework.modules.metric.dto.response.MetricDataResponseDTO;
-import com.framework.framework.usermetric.repository.EducationCreditRecordRepository;
-import com.framework.modules.metric.repository.MetricTypeRepository;
 import com.framework.modules.useraccess.entity.Profile;
+
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -22,31 +22,22 @@ import java.util.*;
 
 @Component
 public class EducationCreditHandler extends AbstractMetricHandler {
+    private final ApplicationEventPublisher publisher;
 
-    private final EducationCreditRecordRepository educationCreditRecordRepository;
-
-    public EducationCreditHandler(EducationCreditRecordRepository educationCreditRecordRepository) {
-        this.educationCreditRecordRepository = educationCreditRecordRepository;
+    public EducationCreditHandler(ApplicationEventPublisher publisher) {
+        this.publisher = publisher;
     }
 
     @Override
     public MetricValidationContext validate(MetricDataDTO request, MetricType metricType) {
         MetricValidationChain chain = new MetricValidationChain(Arrays.asList(
-        new RequiredFieldValidation("courseName"),
-        new RequiredFieldValidation("completionDate"),
-        new RequiredFieldValidation("hours"),
-        new RequiredFieldValidation("institution")
-    ));
-    return chain.execute(request, metricType);
-    }
-
-    private EducationCreditDTO convert(MetricDataDTO request) {
-        EducationCreditDTO dto = new EducationCreditDTO();
-        dto.setCourseName((String) request.getData().get("courseName"));
-        dto.setCompletionDate(LocalDate.parse((String) request.getData().get("completionDate")));
-        dto.setHours(Double.parseDouble(request.getData().get("hours").toString()));
-        dto.setInstitution((String) request.getData().get("institution"));
-        return dto;
+                new RequiredFieldValidation("userId"),
+                new RequiredFieldValidation("courseName"),
+                new RequiredFieldValidation("completionDate"),
+                new RequiredFieldValidation("hours"),
+                new NumericRangeValidation("hours"),
+                new RequiredFieldValidation("institution")));
+        return chain.execute(request, metricType);
     }
 
     @Override
@@ -54,8 +45,8 @@ public class EducationCreditHandler extends AbstractMetricHandler {
         List<String> alerts = new ArrayList<>();
         double horas = context.getNormalized("hours", Double.class);
 
-        if (horas > 1000) {
-            alerts.add("Carga horária muito alta, por favor verifique.");
+        if (horas > 120) {
+            alerts.add("Parabéns, você estuda muito!");
         }
 
         return alerts;
@@ -68,7 +59,6 @@ public class EducationCreditHandler extends AbstractMetricHandler {
         String courseName = context.getNormalized("courseName", String.class);
         String institution = context.getNormalized("institution", String.class);
         LocalDate completionDate = context.getNormalized("completionDate", LocalDate.class);
-        
 
         record.setCourseName(courseName);
         record.setCompletionDate(completionDate);
@@ -85,9 +75,10 @@ public class EducationCreditHandler extends AbstractMetricHandler {
     public MetricDataResponseDTO toResponseDTO(AbstractMetricRecord record) {
         EducationCreditRecord creditRecord = (EducationCreditRecord) record;
         MetricDataResponseDTO responseDTO = new MetricDataResponseDTO();
-        
+
         responseDTO.setId(creditRecord.getId());
         responseDTO.setMetricType(creditRecord.getMetricType().getType());
+        responseDTO.setCreatedAt(creditRecord.getCreatedAt());
         responseDTO.setData(creditRecord.getDetails());
         return responseDTO;
     }
@@ -98,9 +89,38 @@ public class EducationCreditHandler extends AbstractMetricHandler {
     }
 
     @Override
+    public String getUnit() {
+        return "hours";
+    }
+
+    @Override
+    public double getMinThreshold() {
+        return 0.0;
+    }
+
+    @Override
+    public double getMaxThreshold() {
+        return 1000.0;
+    }
+
+    @Override
+    public void afterValidation(MetricValidationContext context) {
+        String userIdStr = (String) context.getOriginalRequest().getData().get("userId");
+        UUID userId = UUID.fromString(userIdStr);
+        Double hours = context.getNormalized("hours", Double.class);
+
+        GamificationEventRequestDTO dto = GamificationEventRequestDTO.builder()
+                .eventType("EDUCATION_CREDITS")
+                .userId(userId)
+                .details(Map.of("hours", hours))
+                .build();
+
+        GamificationEvent event = new GamificationEvent(dto);
+        publisher.publishEvent(event);
+    }
+
+    @Override
     public boolean supports(String metricType) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'supports'");
+        return "EDUCATION_CREDIT".equalsIgnoreCase(metricType);
     }
 }
-

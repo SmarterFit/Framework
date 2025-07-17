@@ -23,7 +23,6 @@ public class MetricTypeInitializer {
 
     public Set<String> initializeMetricTypes() {
         try {
-            createIfNotExists("EDUCATION_CREDIT", "hours", 0, 1000);
             logger.info("Metric types initialized successfully");
             return Set.copyOf(systemMetricTypes);
 

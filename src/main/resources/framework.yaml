@@ -1,10 +1,7 @@
 gamification:
   enabled: true
   events:
-    - "check-in"
-    - content-published
-    - mentorship
-    - volunteering
+    - "EDUCATION_CREDITS"
 
 payment:
   enabled-methods:
@@ -13,7 +10,7 @@ payment:
     - "DEBIT_CARD"
     - "BOLETO"
     - "CORPORATE"
-    - "ANNUITY"
+    - "GROUP_POINTS"
 
 import:
     enabled-methods:
