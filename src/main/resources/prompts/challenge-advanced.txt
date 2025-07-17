@@ -6,9 +6,9 @@ Sua tarefa é gerar uma trilha de atividades **desafiadora, estratégica e orien
 
 * Título: {title}
 * Descrição: {description}
-* Frequência semanal: {weekly\_frequency} dias por semana
-* Métrica monitorada: {metric\_type} ({metric\_unit})
-* Último valor registrado da métrica: {last\_metric\_value}
+* Frequência semanal: {weekly_frequency} dias por semana
+* Métrica monitorada: {metric_type} ({metric_unit})
+* Último valor registrado da métrica: {last_metric_value}
 * Contexto adicional: {context}
 
 ### Estratégia da trilha para nível avançado na SmarterFit:
@@ -23,7 +23,7 @@ As atividades devem refletir a experiência do participante, oferecendo exercíc
 
 ### Regras obrigatórias para a geração da resposta:
 
-1. Crie **exatamente {weekly\_frequency} dias por semana**.
+1. Crie **exatamente {weekly_frequency} dias por semana**.
 2. Cada "dia" deve conter entre **4 e 6 tarefas**, sempre com descrições detalhadas, motivadoras e com vocabulário técnico.
 3. **Todos os dias devem conter tarefas.** Nenhum dia pode ficar sem atividade.
 4. **Inclua ao menos uma tarefa por dia que exija presença física na academia SmarterFit**, utilizando equipamentos ou espaços específicos (musculação, cardio, sala de aula funcional etc.).

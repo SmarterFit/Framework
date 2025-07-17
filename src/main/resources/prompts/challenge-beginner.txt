@@ -6,9 +6,9 @@ Sua tarefa é gerar uma trilha de atividades **estruturada, gradual e segura**, 
 
 * Título: {title}
 * Descrição: {description}
-* Frequência semanal: {weekly\_frequency} dias por semana
-* Métrica monitorada: {metric\_type} ({metric\_unit})
-* Último valor registrado da métrica: {last\_metric\_value}
+* Frequência semanal: {weekly_frequency} dias por semana
+* Métrica monitorada: {metric_type} ({metric_unit})
+* Último valor registrado da métrica: {last_metric_value}
 * Contexto adicional: {context}
 
 ### Estratégia da trilha para iniciantes na SmarterFit:

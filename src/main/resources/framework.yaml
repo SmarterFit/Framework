@@ -13,4 +13,3 @@ import:
     enabled-methods:
         - "JSON"
         - "CSV"
-

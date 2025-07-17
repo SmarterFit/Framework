@@ -24,7 +24,7 @@ public class ClassGroupScheduleController {
         this.classGroupScheduleService = classGroupScheduleService;
     }
 
-    @RequireRole(RoleType.EMPLOYEE)
+    @RequireRole(RoleType.TRAINER)
     @PostMapping("/cadastrar")
     public ResponseEntity<ClassGroupScheduleResponseDTO> createClassGroupSchedule(
             @RequestBody @Valid CreateClassGroupScheduleRequestDTO requestDTO) {

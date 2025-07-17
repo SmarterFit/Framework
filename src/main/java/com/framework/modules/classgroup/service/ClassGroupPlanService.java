@@ -6,7 +6,6 @@ import com.framework.modules.billing.repository.PlanRepository;
 import com.framework.modules.classgroup.dto.request.classgroupplan.CreateClassGroupPlanDTO;
 import com.framework.modules.classgroup.entity.ClassGroup;
 import com.framework.modules.classgroup.entity.ClassGroupPlan;
-import com.framework.modules.classgroup.event.ClassGroupDeactivatedEvent;
 import com.framework.modules.classgroup.mapper.ClassGroupPlanMapper;
 import com.framework.modules.classgroup.repository.ClassGroupPlanRepository;
 import com.framework.modules.classgroup.validation.ValidationFaced;

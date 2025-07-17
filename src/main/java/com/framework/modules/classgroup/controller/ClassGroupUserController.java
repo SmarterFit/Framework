@@ -25,7 +25,7 @@ public class ClassGroupUserController {
         this.classGroupUserService = classGroupUserService;
     }
 
-    @RequireRole(RoleType.EMPLOYEE)
+    @RequireRole(RoleType.TRAINER)
     @PostMapping("/professor/cadastrar")
     public ResponseEntity<Void> addEmployeeToClassGroup(@RequestBody @Valid EmployeeClassGroupUserDTO requestDTO,
             @RequestHeader("X-User-Id") UUID requesterId) {
