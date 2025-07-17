@@ -82,8 +82,20 @@ public abstract class ChallengeHandler {
                     .call()
                     .content();
 
+            if (aiResponse == null || aiResponse.isEmpty()) {
+                throw new ChallengeProcessingException("AI response is empty.");
+            }
+
+            String jsonOnlyResponse = aiResponse.trim()
+                    .replace("```json", "")
+                    .replace("```", "")
+                    .trim();
+
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(aiResponse, new TypeReference<List<ChallengeAiDTO>>() {
+
+            System.out.println(jsonOnlyResponse);
+
+            return mapper.readValue(jsonOnlyResponse, new TypeReference<List<ChallengeAiDTO>>() {
             });
         } catch (IOException e) {
             throw new ChallengeProcessingException("Error parsing AI response", e);
