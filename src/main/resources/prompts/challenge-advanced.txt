@@ -11,6 +11,7 @@ desempenho, consistência e superação pessoal.
 - Frequência semanal: {weekly_frequency} dias por semana
 - Métrica monitorada: {metric_type} ({metric_unit})
 - Último valor registrado da métrica: {last_metric_value}
+- Contexto adicional: {context}
 
 ### Estratégia da trilha para nível avançado:
 

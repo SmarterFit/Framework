@@ -41,6 +41,12 @@ public class MetricTypeService {
     }
 
     @Transactional(readOnly = true)
+    public MetricTypeResponseDTO getMetricTypeByName(String name) {
+        MetricType metricType = metricTypeValidation.validateMetricTypeByName(name);
+        return MetricTypeMapper.toResponse(metricType);
+    }
+
+    @Transactional(readOnly = true)
     public List<MetricTypeResponseDTO> getAllMetricsType() {
         List<MetricType> metricTypes = metricTypeRepository.findAll();
 

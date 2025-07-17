@@ -1,7 +1,7 @@
 package com.framework.framework.usermetric.initializer;
 
-
 import com.framework.framework.usermetric.entity.generic.MetricType;
+import com.framework.framework.usermetric.handler.MetricHandler;
 import com.framework.modules.metric.repository.MetricTypeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +33,23 @@ public class MetricTypeInitializer {
         }
     }
 
+    public void createMetricType(MetricHandler metricHandler) {
+        String type = metricHandler.getSupportedType();
+        String unit = metricHandler.getUnit();
+        double minThreshold = metricHandler.getMinThreshold();
+        double maxThreshold = metricHandler.getMaxThreshold();
+
+        if (!metricTypeRepository.existsByType(type)) {
+            MetricType metricType = new MetricType();
+            metricType.setType(type);
+            metricType.setUnit(unit);
+            metricType.setMinThreshold(minThreshold);
+            metricType.setMaxThreshold(maxThreshold);
+            metricTypeRepository.save(metricType);
+        }
+        systemMetricTypes.add(type);
+    }
+
     private void createIfNotExists(String type, String unit, double minThreshold, double maxThreshold) {
         if (!metricTypeRepository.existsByType(type)) {
             MetricType metricType = new MetricType();
@@ -43,6 +60,5 @@ public class MetricTypeInitializer {
             metricTypeRepository.save(metricType);
         }
         systemMetricTypes.add(type);
-
     }
 }

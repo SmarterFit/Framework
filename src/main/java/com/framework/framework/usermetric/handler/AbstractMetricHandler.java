@@ -2,8 +2,8 @@ package com.framework.framework.usermetric.handler;
 
 import com.framework.framework.usermetric.entity.generic.MetricType;
 import com.framework.framework.usermetric.validation.MetricValidationContext;
-import com.framework.framework.usermetric.entity.MetricProcessResult;
 import com.framework.modules.metric.dto.request.MetricDataDTO;
+import com.framework.framework.usermetric.dto.MetricProcessResult;
 import com.framework.framework.usermetric.entity.generic.AbstractMetricRecord;
 import com.framework.modules.metric.dto.response.MetricDataResponseDTO;
 import com.framework.modules.useraccess.entity.Profile;
@@ -35,6 +35,21 @@ public abstract class AbstractMetricHandler implements MetricHandler {
 
     @Override
     public abstract String getSupportedType();
+
+    @Override
+    public String getUnit() {
+        return null;
+    }
+
+    @Override
+    public double getMinThreshold() {
+        return 0.0;
+    }
+
+    @Override
+    public double getMaxThreshold() {
+        return 0.0;
+    }
 
     public void afterValidation(MetricValidationContext context) {
         // no-op

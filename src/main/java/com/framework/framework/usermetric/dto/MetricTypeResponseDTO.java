@@ -1,4 +1,4 @@
-package com.framework.framework.usermetric.entity;
+package com.framework.framework.usermetric.dto;
 
 import java.util.UUID;
 

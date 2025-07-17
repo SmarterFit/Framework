@@ -32,6 +32,11 @@ public class MetricTypeValidation {
                 .orElseThrow(() -> new BusinessException("MetricType not found"));
     }
 
+    public MetricType validateMetricTypeByName(String name) {
+        return metricTypeRepository.findByType(name)
+                .orElseThrow(() -> new BusinessException("MetricType not found with name: " + name));
+    }
+
     public void validateNameUniqueness(String type) {
         Optional<MetricType> existing = metricTypeRepository.findByType(type);
         if (existing.isPresent()) {

@@ -22,8 +22,8 @@ public class ChallengeStepService {
     private final ChallengeStepValidation challengeStepValidation;
 
     public ChallengeStepService(ChallengeStepRepository repository,
-                                ChallengeDayValidation challengeDayValidation,
-                                ChallengeStepValidation challengeStepValidation) {
+            ChallengeDayValidation challengeDayValidation,
+            ChallengeStepValidation challengeStepValidation) {
         this.repository = repository;
         this.challengeDayValidation = challengeDayValidation;
         this.challengeStepValidation = challengeStepValidation;
@@ -42,6 +42,13 @@ public class ChallengeStepService {
 
         ChallengeStep newStep = ChallengeStepMapper.toEntity(request, step.getDay(), step);
         return ChallengeStepMapper.toResponseDTO(newStep);
+    }
+
+    public ChallengeStepResponseDTO toggle(UUID id) {
+        ChallengeStep step = challengeStepValidation.validateChallengeStep(id);
+        step.setCompleted(!step.isCompleted());
+        ChallengeStep updated = repository.save(step);
+        return ChallengeStepMapper.toResponseDTO(updated);
     }
 
     public void delete(UUID id) {

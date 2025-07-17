@@ -13,11 +13,11 @@ public class UserMetricValidation {
     private final ImportHandlerRegistry importHandlerRegistry;
     private final MetricHandlerRegistry metricHandlerRegistry;
 
-    public UserMetricValidation(ImportHandlerRegistry importHandlerRegistry, MetricHandlerRegistry metricHandlerRegistry) {
+    public UserMetricValidation(ImportHandlerRegistry importHandlerRegistry,
+            MetricHandlerRegistry metricHandlerRegistry) {
         this.importHandlerRegistry = importHandlerRegistry;
         this.metricHandlerRegistry = metricHandlerRegistry;
     }
-
 
     public void validateImportMethod(String methodName) {
         if (!importHandlerRegistry.isMethodEnabled(methodName.toUpperCase())) {
@@ -31,7 +31,6 @@ public class UserMetricValidation {
     }
 
     public MetricHandler getMetricHandler(String metricType) {
-        return metricHandlerRegistry.getHandler(metricType)
-                .orElseThrow(() -> new BusinessException("No handler found for metric type: " + metricType));
+        return metricHandlerRegistry.getHandler(metricType);
     }
 }

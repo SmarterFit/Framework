@@ -7,6 +7,7 @@ import com.framework.framework.challenge.dto.ChallengeAiDTO;
 import com.framework.framework.challenge.utils.ChallengeDayCalculator;
 import com.framework.framework.challenge.utils.ChallengePromptLoader;
 import com.framework.framework.usermetric.entity.generic.MetricType;
+import com.framework.framework.usermetric.validation.MetricValidationContext;
 import com.framework.modules.challenge.entity.ChallengeDay;
 import com.framework.modules.challenge.entity.ChallengeQuest;
 import com.framework.modules.challenge.entity.ChallengeStep;
@@ -27,6 +28,7 @@ public abstract class ChallengeHandler {
 
     protected final ChatClient chatClient;
     protected final UserMetricService userMetricService;
+    protected MetricValidationContext metricValidationContext;
     protected ChallengePromptLoader promptLoader = new ChallengePromptLoader();
     protected ChallengeDayCalculator challengeDayCalculator = new ChallengeDayCalculator();
 
@@ -39,21 +41,28 @@ public abstract class ChallengeHandler {
     protected abstract String fetchUserMetric(MetricType metricType, UUID userId, MetricDataDTO metricDataDTO);
 
     public abstract String getChallengeTypeId();
+
     public abstract String getChallengeTypeName();
+
+    public String getAdditionalContext() {
+        return "Sem contexto adicional definido.";
+    };
 
     public final ChallengeTrail processChallengeQuest(ChallengeQuest quest, UUID userId,
             MetricDataDTO metricDataDTO) throws IOException {
 
         String lastMetric = fetchUserMetric(quest.getMetricType(), userId, metricDataDTO);
+        String additionalContext = getAdditionalContext();
         List<LocalDate> maxChallengeDays = challengeDayCalculator.calculateChallengeDays(
                 quest.getStartDate(), quest.getEndDate(), quest.getDaysOfWeek());
 
-        String prompt = buildPrompt(quest, lastMetric, maxChallengeDays.size());
+        String prompt = buildPrompt(quest, lastMetric, maxChallengeDays.size(), additionalContext);
         List<ChallengeAiDTO> challengeAiDTOS = getResponseAi(prompt);
         return generateTrail(quest, challengeAiDTOS, maxChallengeDays);
     }
 
-    private String buildPrompt(ChallengeQuest quest, String lastMetric, int maxChallengeDays) throws IOException {
+    private String buildPrompt(ChallengeQuest quest, String lastMetric, int maxChallengeDays, String additionalContext)
+            throws IOException {
         String prompt = promptLoader.loadPrompt(quest.getExperienceLevel());
 
         return prompt
@@ -62,7 +71,8 @@ public abstract class ChallengeHandler {
                 .replace("{weekly_frequency}", String.valueOf(maxChallengeDays))
                 .replace("{metric_type}", quest.getMetricType().getType())
                 .replace("{metric_unit}", quest.getMetricType().getUnit())
-                .replace("{last_metric_value}", lastMetric);
+                .replace("{last_metric_value}", lastMetric)
+                .replace("{context}", additionalContext);
     }
 
     private List<ChallengeAiDTO> getResponseAi(String prompt) {

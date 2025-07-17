@@ -10,7 +10,9 @@ import com.framework.modules.challenge.repository.ChallengeTrailRepository;
 import com.framework.modules.challenge.validation.ChallengeDayValidation;
 import com.framework.modules.challenge.validation.ChallengeQuestValidation;
 import com.framework.modules.challenge.validation.ChallengeTrailValidation;
+
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,9 +51,17 @@ public class ChallengeTrailService {
         return ChallengeTrailMapper.toResponseDTO(saved);
     }
 
+    public ChallengeTrailResponseDTO getByQuestId(UUID questId) {
+        challengeQuestValidation.validateChallengeQuestById(questId);
+        ChallengeTrail trail = challengeTrailValidation.findByChallengeQuestId(questId);
+        return ChallengeTrailMapper.toResponseDTO(trail);
+    }
+
+    @Transactional
     public void delete(UUID id) {
-        challengeTrailValidation.validateChallengeTrailExists(id);
-        repository.deleteById(id);
+        ChallengeTrail trail = challengeTrailValidation.validateChallengerTail(id);
+        trail.getChallengeQuest().setTrail(null);
+        repository.delete(trail);
     }
 
     public ChallengeTrailResponseDTO findById(UUID id) {

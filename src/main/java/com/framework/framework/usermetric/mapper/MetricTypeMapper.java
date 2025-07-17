@@ -1,7 +1,7 @@
 package com.framework.framework.usermetric.mapper;
 
 import com.framework.common.mapper.GenericMapper;
-import com.framework.framework.usermetric.entity.MetricTypeResponseDTO;
+import com.framework.framework.usermetric.dto.MetricTypeResponseDTO;
 import com.framework.framework.usermetric.entity.generic.MetricType;
 
 public class MetricTypeMapper {
