@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @RestController
-@CrossOrigin
+@CrossOrigin("*")
 @RequestMapping("/desafio/trilha/ia")
 public class ChallengeController {
 
@@ -26,7 +26,8 @@ public class ChallengeController {
             @RequestBody @Valid ChallengeGenericMetricRequestDTO challengeGenericQuestRequest,
             @RequestHeader("X-User-Id") UUID requesterId) throws IOException {
 
-        ChallengeTrailResponseDTO response = challengeService.generateChallenge(requesterId, challengeGenericQuestRequest);
+        ChallengeTrailResponseDTO response = challengeService.generateChallenge(requesterId,
+                challengeGenericQuestRequest);
         return ResponseEntity.status(201).body(response);
     }
 }

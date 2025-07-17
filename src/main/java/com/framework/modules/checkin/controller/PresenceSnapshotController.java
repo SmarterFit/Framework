@@ -23,7 +23,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/presence-snapshots")
-@CrossOrigin
+@CrossOrigin("*")
 public class PresenceSnapshotController {
 
     private final PresenceSnapshotService presenceSnapshotService;

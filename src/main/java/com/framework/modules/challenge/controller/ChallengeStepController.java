@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("desafio/steps")
-@CrossOrigin
+@CrossOrigin("*")
 public class ChallengeStepController {
 
     private final ChallengeStepService challengeStepService;

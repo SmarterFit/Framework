@@ -23,7 +23,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/class-check-in")
-@CrossOrigin
+@CrossOrigin("*")
 public class ClassCheckInController {
    ClassCheckInService classCheckInService;
 

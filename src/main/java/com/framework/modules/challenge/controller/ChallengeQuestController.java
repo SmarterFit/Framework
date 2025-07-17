@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/desafio/form")
-@CrossOrigin
+@CrossOrigin("*")
 public class ChallengeQuestController {
 
     private final ChallengeQuestService challengeQuestService;

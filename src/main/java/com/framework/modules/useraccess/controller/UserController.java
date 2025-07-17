@@ -19,7 +19,7 @@ import java.util.UUID;
 /// Exemplo: Um usuário com papel diferente de Member só pode ser criado por um usuário com papel igual ou superior.
 @RestController
 @RequestMapping("/usuarios")
-@CrossOrigin
+@CrossOrigin("*")
 public class UserController {
     private final UserService userService;
 

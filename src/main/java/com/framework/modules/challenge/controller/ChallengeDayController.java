@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("desafio/dia")
-@CrossOrigin
+@CrossOrigin("*")
 public class ChallengeDayController {
 
     private final ChallengeDayService challengeDayService;
@@ -28,7 +28,7 @@ public class ChallengeDayController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ChallengeDayResponseDTO> update(@PathVariable UUID id,
-                                                          @RequestBody ChallengeDayRequestUpdateDTO request) {
+            @RequestBody ChallengeDayRequestUpdateDTO request) {
         return ResponseEntity.ok(challengeDayService.update(id, request));
     }
 

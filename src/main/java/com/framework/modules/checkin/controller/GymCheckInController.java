@@ -28,7 +28,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/gym-check-in")
-@CrossOrigin
+@CrossOrigin("*")
 public class GymCheckInController {
     private GymCheckInService gymCheckInService;
 

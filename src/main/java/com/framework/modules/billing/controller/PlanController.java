@@ -21,7 +21,7 @@ import jakarta.validation.Valid;
 
 @RestController()
 @RequestMapping("/planos")
-@CrossOrigin
+@CrossOrigin("*")
 public class PlanController {
    private final PlanService planService;
 

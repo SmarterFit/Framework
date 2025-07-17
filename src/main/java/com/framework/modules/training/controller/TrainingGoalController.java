@@ -9,11 +9,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-@CrossOrigin
+@CrossOrigin("*")
 @RestController
 @RequestMapping("treinos/objetivos")
 public class TrainingGoalController {
-
 
     private final TrainingGoalService trainingGoalService;
 
@@ -23,7 +22,7 @@ public class TrainingGoalController {
 
     @PostMapping("/cadastrar")
     public ResponseEntity<TrainingGoalResponseDTO> create(@Valid @RequestBody TrainingGoalRequestDTO requestDTO,
-                                                          @RequestHeader("X-User-Id") UUID requesterId) {
+            @RequestHeader("X-User-Id") UUID requesterId) {
         TrainingGoalResponseDTO response = trainingGoalService.createTrainingGoal(requestDTO, requesterId);
         return ResponseEntity.status(201).body(response);
     }
@@ -36,7 +35,7 @@ public class TrainingGoalController {
 
     @PutMapping("/atualizar")
     public ResponseEntity<TrainingGoalResponseDTO> update(@Valid @RequestBody TrainingGoalRequestDTO requestDTO,
-                                                          @RequestHeader("X-User-Id") UUID requesterId) {
+            @RequestHeader("X-User-Id") UUID requesterId) {
         TrainingGoalResponseDTO response = trainingGoalService.updateTrainingGoal(requesterId, requestDTO);
         return ResponseEntity.ok(response);
     }
